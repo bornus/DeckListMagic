@@ -26,26 +26,30 @@ namespace CreateEventLambda
             Guid eventUid =Guid.NewGuid();
             Guid tournamentUid = Guid.NewGuid();
 
-            var evenement = new Document();
-            evenement["pk"] = $"{Constantes.DynamoKey.EVENT}{eventUid}";
-            evenement["sk"] = $"{Constantes.DynamoKey.EVENT}{eventUid}#{Constantes.DynamoKey.TOURNAMENT}{tournamentUid}";
-            evenement["eventId"] = $"{eventUid}";
-            evenement["tournamentId"] = $"{tournamentUid}";
-            evenement["eventName"] = magicEvent.EventName;
-            evenement["tournamentName"] = magicEvent.TournamentName;
-            evenement["date"] = magicEvent.Date;
-            evenement["format"] = magicEvent.Format;
+            var evenement = new Document
+            {
+                ["pk"] = $"{Constantes.DynamoKey.EVENT}{eventUid}",
+                ["sk"] = $"{Constantes.DynamoKey.EVENT}{eventUid}#{Constantes.DynamoKey.TOURNAMENT}{tournamentUid}",
+                ["eventId"] = $"{eventUid}",
+                ["tournamentId"] = $"{tournamentUid}",
+                ["eventName"] = magicEvent.EventName,
+                ["tournamentName"] = magicEvent.TournamentName,
+                ["date"] = magicEvent.Date,
+                ["format"] = magicEvent.Format
+            };
 
             magicEvent.EventId = eventUid.ToString();
             magicEvent.TournamentId = tournamentUid.ToString();
 
             var userUid = "45e9452f-1023-49fc-a84c-3466ae37ce5a";
 
-            var evenementTo = new Document();
-            evenementTo["pk"] = $"TO#{userUid}";
-            evenementTo["sk"] = $"EVENT#{eventUid}";
-            evenementTo["eventId"] = $"{eventUid}";
-            evenementTo["userId"] = $"{userUid}";
+            var evenementTo = new Document
+            {
+                ["pk"] = $"TO#{userUid}",
+                ["sk"] = $"EVENT#{eventUid}",
+                ["eventId"] = $"{eventUid}",
+                ["userId"] = $"{userUid}"
+            };
 
             batchWrite.AddDocumentToPut(evenement);
             batchWrite.AddDocumentToPut(evenementTo);
@@ -55,8 +59,7 @@ namespace CreateEventLambda
 
             context.Logger.LogLine("Stream processing complete.");
 
-            var headersDic = new Dictionary<string, string>();
-            headersDic.Add("Content-type", "application/json");
+            var headersDic = new Dictionary<string, string> {{"Content-type", "application/json"}};
 
             return new APIGatewayProxyResponse()
             {
