@@ -6,9 +6,9 @@ using Amazon.CDK.AWS.S3;
 
 namespace CdkAvatar
 {
-    public class CdkAvatarStack : Stack
+    public class CdkDeckListMagicStack : Stack
     {
-        internal CdkAvatarStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+        internal CdkDeckListMagicStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
             var bucket = Bucket.FromBucketArn(this, "bornusS3", "arn:aws:s3:::bornus");
 
