@@ -21,7 +21,6 @@ namespace GetPlayerTournaments
         /// <summary>
         /// A simple function that takes a string and does a ToUpper
         /// </summary>
-        /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
         public APIGatewayProxyResponse FunctionHandler(ILambdaContext context)
@@ -33,8 +32,8 @@ namespace GetPlayerTournaments
 
             Table deckListTable = Table.LoadTable(client, "DeckList");
             QueryFilter playerFilter = new QueryFilter();
-            playerFilter.AddCondition("pk", QueryOperator.Equal, new List<AttributeValue> { new AttributeValue($"{Constantes.DynamoKey.USER}{userUid}") });
-            playerFilter.AddCondition("sk", QueryOperator.BeginsWith, new List<AttributeValue> { new AttributeValue($"{Constantes.DynamoKey.REGISTER}") });
+            playerFilter.AddCondition(Constantes.DynamoCol.PK, QueryOperator.Equal, new List<AttributeValue> { new AttributeValue($"{Constantes.DynamoKey.USER}{userUid}") });
+            playerFilter.AddCondition(Constantes.DynamoCol.SK, QueryOperator.BeginsWith, new List<AttributeValue> { new AttributeValue($"{Constantes.DynamoKey.REGISTER}") });
             Search search = deckListTable.Query(playerFilter);
             List<Tournament> tournaments = new List<Tournament>();
 
@@ -54,29 +53,33 @@ namespace GetPlayerTournaments
                     }
                 }
             } while (!search.IsDone);
-            QueryFilter tournamentFilter = new QueryFilter();
-            tournamentFilter.AddCondition("pk", QueryOperator.Equal, pkValues);
-            tournamentFilter.AddCondition("sk", QueryOperator.Equal, skValues);
-            Search searchtournaments = deckListTable.Query(tournamentFilter);
 
-            do
+            if (pkValues.Any())
             {
-                var set = searchtournaments.GetNextSetAsync();
-                set.Wait();
-                foreach (var tournamentDoc in set.Result)
-                {
-                    var tournament = new Tournament
-                    {
-                        EventId = tournamentDoc[Constantes.DynamoCol.EVENT_ID],
-                        EventName = tournamentDoc[Constantes.DynamoCol.EVENT_NAME],
-                        TournamentId = tournamentDoc[Constantes.DynamoCol.TOURNAMENT_ID],
-                        TournamentName = tournamentDoc[Constantes.DynamoCol.TOURNAMENT_NAME],
-                        TournamentFormat = tournamentDoc[Constantes.DynamoCol.FORMAT]
-                    };
+                QueryFilter tournamentFilter = new QueryFilter();
+                tournamentFilter.AddCondition(Constantes.DynamoCol.PK, QueryOperator.Equal, pkValues);
+                tournamentFilter.AddCondition(Constantes.DynamoCol.SK, QueryOperator.Equal, skValues);
+                Search searchtournaments = deckListTable.Query(tournamentFilter);
 
-                    tournaments.Add(tournament);
-                }
-            } while (!search.IsDone);
+                do
+                {
+                    var set = searchtournaments.GetNextSetAsync();
+                    set.Wait();
+                    foreach (var tournamentDoc in set.Result)
+                    {
+                        var tournament = new Tournament
+                        {
+                            EventId = tournamentDoc[Constantes.DynamoCol.EVENT_ID],
+                            EventName = tournamentDoc[Constantes.DynamoCol.EVENT_NAME],
+                            TournamentId = tournamentDoc[Constantes.DynamoCol.TOURNAMENT_ID],
+                            TournamentName = tournamentDoc[Constantes.DynamoCol.TOURNAMENT_NAME],
+                            TournamentFormat = tournamentDoc[Constantes.DynamoCol.FORMAT]
+                        };
+
+                        tournaments.Add(tournament);
+                    }
+                } while (!search.IsDone);
+            }
 
             context.Logger.LogLine("Stream processing complete.");
 
@@ -84,7 +87,7 @@ namespace GetPlayerTournaments
 
             return new APIGatewayProxyResponse()
             {
-                StatusCode = 201,
+                StatusCode = 200,
                 Headers = headersDic,
                 // return the image in Base64 encoding
                 Body = JsonConvert.SerializeObject(tournaments)

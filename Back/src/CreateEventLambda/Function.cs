@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using DeckList.Commons;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -18,37 +22,60 @@ namespace CreateEventLambda
         {
             context.Logger.LogLine($"Beginning to register {magicEvent.EventName} Event.");
 
+            var userUid = "45e9452f-1023-49fc-a84c-3466ae37ce5a";
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
 
-            Table deckListTable = Table.LoadTable(client, "DeckList");
+            Table deckListTable = Table.LoadTable(client, Constantes.TableName);
             var batchWrite = deckListTable.CreateBatchWrite();
 
-            Guid eventUid =Guid.NewGuid();
-            Guid tournamentUid = Guid.NewGuid();
+            Guid eventUid = Guid.NewGuid();
+            Guid tournamentUid;
+            string registerCode;
+            bool find = false;
+            do
+            {
+                tournamentUid = Guid.NewGuid();
+                registerCode = tournamentUid.ToString().Substring(0, 8);
+                QueryRequest req = new QueryRequest
+                {
+                    TableName = Constantes.TableName,
+                    IndexName = Constantes.TableIndex.REGISTER_CODE,
+                    KeyConditionExpression = $"{Constantes.DynamoCol.REGISTER_CODE} = :v_registerCode",
+                    ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                        {":v_registerCode", new AttributeValue {
+                            S = registerCode
+                        }}
+                        }
+                };
+                Task<QueryResponse> search = client.QueryAsync(req);
+                search.Wait();
+                find = search.Result.Count != 0;
+            } while (find);
+
 
             var evenement = new Document
             {
-                ["pk"] = $"{Constantes.DynamoKey.EVENT}{eventUid}",
-                ["sk"] = $"{Constantes.DynamoKey.EVENT}{eventUid}#{Constantes.DynamoKey.TOURNAMENT}{tournamentUid}",
-                ["eventId"] = $"{eventUid}",
-                ["tournamentId"] = $"{tournamentUid}",
-                ["eventName"] = magicEvent.EventName,
-                ["tournamentName"] = magicEvent.TournamentName,
-                ["date"] = magicEvent.Date,
-                ["format"] = magicEvent.Format
+                [Constantes.DynamoCol.PK] = $"{Constantes.DynamoKey.EVENT}{eventUid}",
+                [Constantes.DynamoCol.SK] = $"{Constantes.DynamoKey.EVENT}{eventUid}#{Constantes.DynamoKey.TOURNAMENT}{tournamentUid}",
+                [Constantes.DynamoCol.EVENT_ID] = $"{eventUid}",
+                [Constantes.DynamoCol.TOURNAMENT_ID] = $"{tournamentUid}",
+                [Constantes.DynamoCol.EVENT_NAME] = magicEvent.EventName,
+                [Constantes.DynamoCol.TOURNAMENT_NAME] = magicEvent.TournamentName,
+                [Constantes.DynamoCol.DATE] = magicEvent.Date,
+                [Constantes.DynamoCol.FORMAT] = magicEvent.Format,
+                [Constantes.DynamoCol.REGISTER_CODE] = registerCode,
             };
 
             magicEvent.EventId = eventUid.ToString();
             magicEvent.TournamentId = tournamentUid.ToString();
-
-            var userUid = "45e9452f-1023-49fc-a84c-3466ae37ce5a";
+            magicEvent.RegisterCode = registerCode;
 
             var evenementTo = new Document
             {
-                ["pk"] = $"TO#{userUid}",
-                ["sk"] = $"EVENT#{eventUid}",
-                ["eventId"] = $"{eventUid}",
-                ["userId"] = $"{userUid}"
+                [Constantes.DynamoCol.PK] = $"TO#{userUid}",
+                [Constantes.DynamoCol.SK] = $"EVENT#{eventUid}",
+                [Constantes.DynamoCol.EVENT_ID] = $"{eventUid}",
+                [Constantes.DynamoCol.USER_ID] = $"{userUid}"
             };
 
             batchWrite.AddDocumentToPut(evenement);

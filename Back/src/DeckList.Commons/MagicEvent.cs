@@ -35,5 +35,10 @@ namespace CreateEventLambda
         /// L'identifiant du tournois
         /// </summary>
         public string TournamentId { get; set; }
+
+        /// <summary>
+        /// Le code d'inscription au tournois
+        /// </summary>
+        public string RegisterCode { get; set; }
     }
 }
