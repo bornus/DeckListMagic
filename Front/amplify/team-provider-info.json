@@ -1,0 +1,25 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-decklistfront-dev-153130-authRole",
+            "UnauthRoleArn": "arn:aws:iam::722855790333:role/amplify-decklistfront-dev-153130-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::722855790333:role/amplify-decklistfront-dev-153130-authRole",
+            "Region": "eu-west-1",
+            "DeploymentBucketName": "amplify-decklistfront-dev-153130-deployment",
+            "UnauthRoleName": "amplify-decklistfront-dev-153130-unauthRole",
+            "StackName": "amplify-decklistfront-dev-153130",
+            "StackId": "arn:aws:cloudformation:eu-west-1:722855790333:stack/amplify-decklistfront-dev-153130/280e24d0-c9c4-11ea-a58d-0ac3732ac58c",
+            "AmplifyAppId": "d2mc7a987ia6e1"
+        },
+        "categories": {
+            "function": {
+                "DeckListPostConfirmation": {
+                    "GROUP": "User"
+                }
+            },
+            "auth": {
+                "DeckList": {}
+            }
+        }
+    }
+}

@@ -1,0 +1,261 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Root stack for the Amplify AWS CloudFormation provider",
+	"Parameters": {
+		"DeploymentBucketName": {
+			"Description": "Name of the common deployment bucket provided by the parent stack",
+			"Type": "String",
+			"Default": "DeploymentBucket"
+		},
+		"AuthRoleName": {
+			"Type": "String",
+			"Default": "AuthRoleName"
+		},
+		"UnauthRoleName": {
+			"Type": "String",
+			"Default": "UnauthRoleName"
+		}
+	},
+	"Resources": {
+		"DeploymentBucket": {
+			"Type": "AWS::S3::Bucket",
+			"DeletionPolicy": "Retain",
+			"Properties": {
+				"BucketName": {
+					"Ref": "DeploymentBucketName"
+				}
+			}
+		},
+		"AuthRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Ref": "AuthRoleName"
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "",
+							"Effect": "Deny",
+							"Principal": {
+								"Federated": "cognito-identity.amazonaws.com"
+							},
+							"Action": "sts:AssumeRoleWithWebIdentity"
+						}
+					]
+				}
+			}
+		},
+		"UnauthRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"RoleName": {
+					"Ref": "UnauthRoleName"
+				},
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "",
+							"Effect": "Deny",
+							"Principal": {
+								"Federated": "cognito-identity.amazonaws.com"
+							},
+							"Action": "sts:AssumeRoleWithWebIdentity"
+						}
+					]
+				}
+			}
+		},
+		"functionDeckListPostConfirmation": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-decklistfront-dev-153130-deployment/amplify-cfn-templates/function/DeckListPostConfirmation-cloudformation-template.json",
+				"Parameters": {
+					"modules": "add-to-group",
+					"resourceName": "DeckListPostConfirmation",
+					"GROUP": "User",
+					"env": "dev"
+				}
+			}
+		},
+		"authuserPoolGroups": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-decklistfront-dev-153130-deployment/amplify-cfn-templates/auth/template.json",
+				"Parameters": {
+					"AuthRoleArn": {
+						"Fn::GetAtt": [
+							"AuthRole",
+							"Arn"
+						]
+					},
+					"UnauthRoleArn": {
+						"Fn::GetAtt": [
+							"UnauthRole",
+							"Arn"
+						]
+					},
+					"authDeckListUserPoolId": {
+						"Fn::GetAtt": [
+							"authDeckList",
+							"Outputs.UserPoolId"
+						]
+					},
+					"authDeckListAppClientIDWeb": {
+						"Fn::GetAtt": [
+							"authDeckList",
+							"Outputs.AppClientIDWeb"
+						]
+					},
+					"authDeckListAppClientID": {
+						"Fn::GetAtt": [
+							"authDeckList",
+							"Outputs.AppClientID"
+						]
+					},
+					"env": "dev"
+				}
+			}
+		},
+		"authDeckList": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Properties": {
+				"TemplateURL": "https://s3.amazonaws.com/amplify-decklistfront-dev-153130-deployment/amplify-cfn-templates/auth/DeckList-cloudformation-template.yml",
+				"Parameters": {
+					"resourceNameTruncated": "DeckLia9a46d5f",
+					"userPoolName": "DeckList-UserPool",
+					"autoVerifiedAttributes": "email",
+					"mfaConfiguration": "OPTIONAL",
+					"mfaTypes": "TOTP",
+					"smsAuthenticationMessage": "Your authentication code is {####}",
+					"smsVerificationMessage": "Your verification code is {####}",
+					"emailVerificationSubject": "[DeckList] Votre code de vérification",
+					"emailVerificationMessage": "Votre code de vérification est le suivant {####}",
+					"defaultPasswordPolicy": true,
+					"passwordPolicyMinLength": 8,
+					"passwordPolicyCharacters": "",
+					"requiredAttributes": "email,name",
+					"userpoolClientGenerateSecret": true,
+					"userpoolClientRefreshTokenValidity": 30,
+					"userpoolClientWriteAttributes": "email",
+					"userpoolClientReadAttributes": "email",
+					"userpoolClientLambdaRole": "DeckLia9a46d5f_userpoolclient_lambda_role",
+					"userpoolClientSetAttributes": false,
+					"useDefault": "manual",
+					"authSelections": "userPoolOnly",
+					"resourceName": "DeckList",
+					"usernameAttributes": "email",
+					"userPoolGroups": true,
+					"adminQueries": false,
+					"triggers": "{\"PostConfirmation\":[\"add-to-group\"]}",
+					"hostedUI": false,
+					"userPoolGroupList": "User,Organizer,Admin",
+					"authRoleArn": {
+						"Fn::GetAtt": [
+							"AuthRole",
+							"Arn"
+						]
+					},
+					"unauthRoleArn": {
+						"Fn::GetAtt": [
+							"UnauthRole",
+							"Arn"
+						]
+					},
+					"parentStack": {
+						"Ref": "AWS::StackId"
+					},
+					"permissions": "{\"policyName\":\"AddToGroupCognito\",\"trigger\":\"PostConfirmation\",\"effect\":\"Allow\",\"actions\":[\"cognito-idp:AdminAddUserToGroup\",\"cognito-idp:GetGroup\",\"cognito-idp:CreateGroup\"],\"resource\":{\"paramType\":\"!GetAtt\",\"keys\":[\"UserPool\",\"Arn\"]}}",
+					"dependsOn": "[object Object]",
+					"functionDeckListPostConfirmationArn": {
+						"Fn::GetAtt": [
+							"functionDeckListPostConfirmation",
+							"Outputs.Arn"
+						]
+					},
+					"functionDeckListPostConfirmationName": {
+						"Fn::GetAtt": [
+							"functionDeckListPostConfirmation",
+							"Outputs.Name"
+						]
+					},
+					"env": "dev"
+				}
+			}
+		}
+	},
+	"Outputs": {
+		"Region": {
+			"Description": "CloudFormation provider root stack Region",
+			"Value": {
+				"Ref": "AWS::Region"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-Region"
+				}
+			}
+		},
+		"StackName": {
+			"Description": "CloudFormation provider root stack ID",
+			"Value": {
+				"Ref": "AWS::StackName"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-StackName"
+				}
+			}
+		},
+		"StackId": {
+			"Description": "CloudFormation provider root stack name",
+			"Value": {
+				"Ref": "AWS::StackId"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-StackId"
+				}
+			}
+		},
+		"DeploymentBucketName": {
+			"Description": "CloudFormation provider root stack deployment bucket name",
+			"Value": {
+				"Ref": "DeploymentBucketName"
+			},
+			"Export": {
+				"Name": {
+					"Fn::Sub": "${AWS::StackName}-DeploymentBucketName"
+				}
+			}
+		},
+		"AuthRoleArn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"AuthRole",
+					"Arn"
+				]
+			}
+		},
+		"UnauthRoleArn": {
+			"Value": {
+				"Fn::GetAtt": [
+					"UnauthRole",
+					"Arn"
+				]
+			}
+		},
+		"AuthRoleName": {
+			"Value": {
+				"Ref": "AuthRole"
+			}
+		},
+		"UnauthRoleName": {
+			"Value": {
+				"Ref": "UnauthRole"
+			}
+		}
+	}
+}

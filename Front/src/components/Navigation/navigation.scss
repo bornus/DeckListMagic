@@ -1,0 +1,55 @@
+.navigation {
+    padding-top: 160px;
+    padding-bottom: 21px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 285px;
+    height: 100vh;
+    background-color: #f8f9fa;
+
+    &__link {
+      font-size: 17px;
+      letter-spacing: 0px;
+      line-height: 34px;
+      color: #000000;
+      font-family: "Gotham";
+      width: 100%;
+      font-weight: 300;
+      transition: .2s ease-in-out opacity;
+      opacity: .7;
+      padding: 0 10px 0 28px;
+      margin: 9px 0;
+      
+      &:hover {
+        text-decoration: none;
+        color: #000000;
+        opacity: 1;
+      }
+    }
+
+    &__link--active {
+      border-left: 8px solid #88c648;
+      padding-left: 26px;
+      font-weight: bold;
+    }
+
+
+
+    &__container {
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+  
+  // @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  //   .navigation {
+  //     &__container {
+  //       width: 300px;
+  //     }
+  //   }
+  // }

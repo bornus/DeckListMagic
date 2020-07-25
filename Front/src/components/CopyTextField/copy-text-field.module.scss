@@ -1,0 +1,47 @@
+.container {
+  background: #f1f2f5;
+  border-radius: 5px;
+  font-family: Helvetica;
+  font-size: 16px;
+  color: #232323;
+  font-family: Helvetica;
+  font-size: 15px;
+  color: #7e878c;
+  padding: 11px 20px 11px 13px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  svg {
+    opacity: .7;
+    min-width: 20px;
+    transition: .2s ease-in-out opacity;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.value {
+  font-family: Helvetica;
+  font-size: 16px;
+  color: #232323;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.copiedTag {
+  font-size: 11px;
+  color: '#005464';
+}
+
+.keyValueContainer {
+  flex: 1;
+  max-width: 100%;
+  overflow: hidden;
+  padding-right: 20px;
+}

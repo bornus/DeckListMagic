@@ -1,0 +1,90 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "amplify-decklistfront-dev-153130-authRole",
+			"UnauthRoleArn": "arn:aws:iam::722855790333:role/amplify-decklistfront-dev-153130-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::722855790333:role/amplify-decklistfront-dev-153130-authRole",
+			"Region": "eu-west-1",
+			"DeploymentBucketName": "amplify-decklistfront-dev-153130-deployment",
+			"UnauthRoleName": "amplify-decklistfront-dev-153130-unauthRole",
+			"StackName": "amplify-decklistfront-dev-153130",
+			"StackId": "arn:aws:cloudformation:eu-west-1:722855790333:stack/amplify-decklistfront-dev-153130/280e24d0-c9c4-11ea-a58d-0ac3732ac58c",
+			"AmplifyAppId": "d2mc7a987ia6e1"
+		}
+	},
+	"function": {
+		"DeckListPostConfirmation": {
+			"build": true,
+			"providerPlugin": "awscloudformation",
+			"service": "Lambda",
+			"lastBuildTimeStamp": "2020-07-19T13:54:13.010Z",
+			"lastPackageTimeStamp": "2020-07-19T13:54:13.217Z",
+			"distZipFilename": "DeckListPostConfirmation-394d614d2b524f543266-build.zip",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-decklistfront-dev-153130-deployment/amplify-cfn-templates/function/DeckListPostConfirmation-cloudformation-template.json",
+				"logicalId": "functionDeckListPostConfirmation"
+			},
+			"lastPushTimeStamp": "2020-07-19T13:57:46.313Z",
+			"output": {
+				"Region": "eu-west-1",
+				"Arn": "arn:aws:lambda:eu-west-1:722855790333:function:DeckListPostConfirmation-dev",
+				"Name": "DeckListPostConfirmation-dev",
+				"LambdaExecutionRole": "DeckListPostConfirmation-dev"
+			},
+			"lastPushDirHash": "shpvjRATpGxg8dn0vFIoJU/4PAI="
+		}
+	},
+	"auth": {
+		"userPoolGroups": {
+			"service": "Cognito-UserPool-Groups",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "DeckList",
+					"attributes": [
+						"UserPoolId",
+						"AppClientIDWeb",
+						"AppClientID"
+					]
+				}
+			],
+			"lastPushTimeStamp": "2020-07-19T13:57:46.313Z",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-decklistfront-dev-153130-deployment/amplify-cfn-templates/auth/template.json",
+				"logicalId": "authuserPoolGroups"
+			},
+			"output": {},
+			"lastPushDirHash": "Hn5ymWt4KYZSjb7rnNFSiWYvdjc="
+		},
+		"DeckList": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "function",
+					"resourceName": "DeckListPostConfirmation",
+					"triggerProvider": "Cognito",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			],
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/amplify-decklistfront-dev-153130-deployment/amplify-cfn-templates/auth/DeckList-cloudformation-template.yml",
+				"logicalId": "authDeckList"
+			},
+			"lastPushTimeStamp": "2020-07-19T13:57:46.313Z",
+			"output": {
+				"CreatedSNSRole": "arn:aws:iam::722855790333:role/snsundefined153130-dev",
+				"AppClientSecret": "1podgj928fnictbtf4b9plae428plifesbj8q00e631v6o103jre",
+				"UserPoolId": "eu-west-1_bAdWwPpkd",
+				"AppClientIDWeb": "1sa0uclfdc21vqduav9fo13e91",
+				"AppClientID": "5jkjqll9uvoeds8tqi0d8654i1",
+				"UserPoolName": "DeckList-UserPool"
+			},
+			"lastPushDirHash": "aiwsDPP8TpH7N2WHMizFHD1u2yM="
+		}
+	}
+}

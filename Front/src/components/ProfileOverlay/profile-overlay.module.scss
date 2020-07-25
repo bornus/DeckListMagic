@@ -1,0 +1,16 @@
+.container {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #d4d8de;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  padding: 30px;
+  min-width: 250px;
+}
+
+.open {
+  display: block;
+}

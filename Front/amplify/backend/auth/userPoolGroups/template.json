@@ -1,0 +1,81 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "authDeckListUserPoolId": {
+            "Type": "String",
+            "Default": "authDeckListUserPoolId"
+        },
+        
+        "authDeckListAppClientID": {
+            "Type": "String",
+            "Default": "authDeckListAppClientID"
+        },
+        "authDeckListAppClientIDWeb": {
+            "Type": "String",
+            "Default": "authDeckListAppClientIDWeb"
+        },
+        "AuthRoleArn": {
+            "Type": "String"
+        },
+        "UnauthRoleArn": {
+            "Type": "String"
+        },
+        "env": {
+            "Type": "String"
+        }
+    },
+    "Conditions": {
+        "ShouldNotCreateEnvResources": {
+            "Fn::Equals": [
+                {
+                    "Ref": "env"
+                },
+                "NONE"
+            ]
+        }
+    },
+    "Resources": {
+    
+        "UserGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "User",
+              "Precedence" : 1,
+              
+              "UserPoolId" : {
+                "Ref": "authDeckListUserPoolId"
+              } 
+            }
+        },
+        
+    
+        "OrganizerGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "Organizer",
+              "Precedence" : 2,
+              
+              "UserPoolId" : {
+                "Ref": "authDeckListUserPoolId"
+              } 
+            }
+        },
+        
+    
+        "AdminGroup": {
+          "Type" : "AWS::Cognito::UserPoolGroup",
+          "Properties" : {
+              "GroupName" : "Admin",
+              "Precedence" : 3,
+              
+              "UserPoolId" : {
+                "Ref": "authDeckListUserPoolId"
+              } 
+            }
+        },
+        
+    
+    
+    },
+    
+}
