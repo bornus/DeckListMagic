@@ -6,6 +6,9 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Store, { persistor } from './authentificatedPages/store';
+import Header from 'components/Header';
+
+import './App.scss';
 
 import awsconfig from './aws-exports';
 Amplify.configure(awsconfig);
@@ -40,6 +43,7 @@ function render() {
   // const Header = require('./components/Header').default;
   // const Navigation = require('./components/Navigation').default;
   const HomePage = require('./unauthentificatedPages/HomePage').default;
+  const SignUp = require('./unauthentificatedPages/SignUp').default;
 
   ReactDOM.render(
     <Provider store={Store}>
@@ -47,7 +51,12 @@ function render() {
         <Router>
           <Switch>
             <Route exact path="/">
+              <Header />
               <HomePage />
+            </Route>
+            <Route exact path="/signUp">
+              <Header />
+              <SignUp />
             </Route>
             <Route path="/">
               <App />
@@ -67,4 +76,5 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   // module.hot.accept('./components/Header', render);
   // module.hot.accept('./components/Navigation', render);
   module.hot.accept('./unauthentificatedPages/HomePage', render);
+  module.hot.accept('./unauthentificatedPages/SignUp', render);
 }

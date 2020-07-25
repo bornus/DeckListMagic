@@ -74,6 +74,10 @@ export interface Auth {
   authData?: AuthData;
   forgotPasswordData: ForgotPasswordData;
   signInForm: FormState;
+  signUpForm: FormState & {
+    email: string;
+    step: number;
+  };
   signOutForm: FormState;
   twoFactorForm: FormState;
   newPasswordRequiredForm: FormState;

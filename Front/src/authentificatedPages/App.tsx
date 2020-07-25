@@ -17,7 +17,6 @@ import ForgotPasswordCode from 'features/auth/ForgotPasswordCode';
 import ForgotPasswordNewPassword from 'features/auth/ForgotPasswordNewPassword';
 
 import 'react-responsive-modal/styles.css';
-import './App.scss';
 
 export default function App(): JSX.Element {
   const dispatch = useDispatch();

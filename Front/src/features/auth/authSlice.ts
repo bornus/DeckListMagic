@@ -20,6 +20,11 @@ const initialState: Auth = {
     code: undefined,
   },
   signInForm: initValuesCommonForm,
+  signUpForm: {
+    ...initValuesCommonForm,
+    email: '',
+    step: 0,
+  },
   signOutForm: initValuesCommonForm,
   twoFactorForm: initValuesCommonForm,
   newPasswordRequiredForm: initValuesCommonForm,
@@ -86,7 +91,7 @@ const authSlice = createSlice({
         loading: false,
       };
     },
-    signingIn(state: Auth) {
+    signIngIn(state: Auth) {
       state.signInForm = {
         ...initialState.signInForm,
         loading: true,
@@ -103,6 +108,59 @@ const authSlice = createSlice({
       state.signInForm = {
         error: action.payload,
         loading: false,
+      };
+    },
+    signUpIn(state: Auth) {
+      state.signUpForm = {
+        ...initialState.signUpForm,
+        loading: true,
+      };
+    },
+    signUpSuccess(state: Auth, action: PayloadAction<any>) {
+      // state.authData = {
+      //   user: action.payload,
+      // };
+      state.signUpForm = {
+        ...initValuesCommonForm,
+        email: action.payload,
+        step: 1,
+      }
+      // state.profileOverlayOpened = false;
+    },
+    signUpError(state: Auth, action: PayloadAction<any>) {
+      state.signUpForm = {
+        ...initialState.signUpForm,
+        error: action.payload,
+        loading: false,
+      };
+    },
+    confirmSignUpIn(state: Auth) {
+      state.signUpForm = {
+        ...initialState.signUpForm,
+        loading: true,
+      };
+    },
+    confirmSignUpSuccess(state: Auth) {
+      // state.authData = {
+      //   user: action.payload,
+      // };
+      state.signUpForm = {
+        ...initialState.signUpForm,
+        step: 2,
+      }
+      // state.profileOverlayOpened = false;
+    },
+    confirmSignUpError(state: Auth, action: PayloadAction<any>) {
+      state.signUpForm = {
+        ...initialState.signUpForm,
+        error: action.payload,
+        loading: false,
+      };
+    },
+    signUpGoToConfirm(state: Auth) {
+      state.signUpForm = {
+        ...initialState.signUpForm,
+        step: 1,
       };
     },
     signingOut(state: Auth) {
@@ -222,6 +280,7 @@ export const {
   askForForgotPasswordStop,
   askForForgotPasswordCode,
   setProfileOverlayOpened,
+  signUpGoToConfirm,
 } = authSlice.actions;
 
 export const currentAuthenticatedUser = (): AppThunk => async (dispatch: AppDispatch) => {
@@ -235,7 +294,7 @@ export const currentAuthenticatedUser = (): AppThunk => async (dispatch: AppDisp
 
 export const signIn = (email: string, password: string): AppThunk => async (dispatch: AppDispatch) => {
   try {
-    dispatch(authSlice.actions.signingIn());
+    dispatch(authSlice.actions.signIngIn());
     const user = await awsAuth.signIn(email, password);
     dispatch(authSlice.actions.signInSuccess(user));
   } catch (e) {
@@ -250,6 +309,51 @@ export const confirmSignIn = (cognitoUser: CognitoUser, code: string): AppThunk 
     dispatch(authSlice.actions.confirm2FASuccess(user));
   } catch (e) {
     dispatch(authSlice.actions.confirm2FAError(e));
+  }
+};
+
+export const signUp = (
+  email: string,
+  password: string,
+  firstname: string,
+  lastname: string,
+): AppThunk => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(authSlice.actions.signUpIn());
+    const user = await awsAuth.signUp({
+      username: email,
+      password,
+      attributes: { 
+        family_name: lastname,
+        name: firstname,
+      },
+    })
+
+    dispatch(authSlice.actions.signUpSuccess(user));
+  } catch (e) {
+    dispatch(authSlice.actions.signUpError(e));
+  }
+};
+
+export const signUpResendCode = ( email: string ): AppThunk => async () => {
+  try {
+    await awsAuth.resendSignUp(email);
+  } catch (e) {
+    console.error(e)
+  }
+};
+
+export const confirmSignUp = (
+  email: string,
+  code: string,
+): AppThunk => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(authSlice.actions.confirmSignUpIn());
+    const user = await awsAuth.confirmSignUp(email, code)
+
+    dispatch(authSlice.actions.confirmSignUpSuccess());
+  } catch (e) {
+    dispatch(authSlice.actions.confirmSignUpError(e));
   }
 };
 
