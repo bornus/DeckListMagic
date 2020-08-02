@@ -30,6 +30,7 @@ module.exports = {
     'react/no-unescaped-entities': "off",
     '@typescript-eslint/no-use-before-define': "off",
     // '@typescript-eslint/no-use-before-define': ["error", { "variables": false }],
-    '@typescript-eslint/no-var-requires': "off"
+    '@typescript-eslint/no-var-requires': "off",
+    'react/display-name': "off"
   },
 };

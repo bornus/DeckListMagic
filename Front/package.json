@@ -13,6 +13,7 @@
     "aws-amplify": "^3.0.17",
     "aws-amplify-react": "^4.1.16",
     "aws-sdk": "^2.692.0",
+    "axios": "^0.19.2",
     "bootstrap-scss": "^4.5.0",
     "classnames": "^2.2.6",
     "framer-motion": "^1.11.1",

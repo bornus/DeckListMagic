@@ -4,6 +4,7 @@ import Amplify from 'aws-amplify';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import axios from 'axios';
 
 import Store, { persistor } from './authentificatedPages/store';
 import Header from 'components/Header';
@@ -37,6 +38,8 @@ Amplify.configure({
   },
 });
 */
+
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 function render() {
   const App = require('./authentificatedPages/App').default;
