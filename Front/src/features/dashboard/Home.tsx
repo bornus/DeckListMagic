@@ -1,12 +1,16 @@
 import React from 'react';
-import { API } from 'aws-amplify';
+import { API, Auth } from 'aws-amplify';
 
 const testApi = async (): Promise<void> => {
   try {
     const apiName = 'api';
-    const path = 'newsletter/subscribe';
+    const path = 'event';
+    const Authorization = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`;
     const data = {
       body: {},
+      headers: {
+        Authorization,
+      },
     };
 
     const { statusCode, ...rest } = await API.post(apiName, path, data);
