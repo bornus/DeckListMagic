@@ -1,128 +1,64 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: >
-  User dashboard, to list documentation for each published features
-
-Parameters:
-  mainDomain:
-    Type: "String"
-    Default: "front.YOURDOMAIN.com"
+Description: Creates an S3 bucket configured for hosting a static website
 
 Resources:
-  AmplifyRole:
-    Type: AWS::IAM::Role
+
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
     Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
+      BucketName: 'elfenthlis-decklist-front'
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+    DeletionPolicy: Retain
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref 'WebsiteBucket'
+      PolicyDocument:
         Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - amplify.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: Amplify
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action: 'amplify:*'
-                Resource: '*'
-        - PolicyName: user-dashboard-repository-access
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Resource: !GetAtt Repository.Arn
-                Action:
-                  - "codecommit:*"
+        - Sid: PublicReadForGetBucketObjects
+          Effect: Allow
+          Principal: '*'
+          Action: s3:GetObject
+          Resource: !Join ['', ['arn:aws:s3:::', !Ref 'WebsiteBucket', /*]]
 
-  Repository:
-    Type: AWS::CodeCommit::Repository
-    Properties: 
-      RepositoryName: user-dashboard
-
-  AmplifyApp:
-    Type: 'AWS::Amplify::App'
+  WebsiteCloudfront:
+    Type: AWS::CloudFront::Distribution
+    DependsOn:
+    - WebsiteBucket
     Properties:
-      Name: user-dashboard
-      Repository: !GetAtt Repository.CloneUrlHttp # !GetAtt Repository.Arn
-      Description: Website for partner to have the documentations about each features
-      EnvironmentVariables:
-        - Name: REACT_APP_API_MANAGEMENT_GATEWAY_NAME
-          Value: '{{resolve:ssm:API_MANAGEMENT_GATEWAY_NAME:1}}'
-        - Name: REACT_APP_API_MANAGEMENT_GATEWAY_ROOT_URL
-          Value: '{{resolve:ssm:API_MANAGEMENT_GATEWAY_ROOT_URL:1}}'
-        - Name: REACT_APP_DEVPORTAL_DASHBOARD_APP_CLIENT_WEB
-          Value: '{{resolve:ssm:DEVPORTAL_DASHBOARD_APP_CLIENT_WEB:1}}'
-        - Name: REACT_APP_DEVPORTAL_DASHBOARD_IDENTITY_POOL
-          Value: '{{resolve:ssm:DEVPORTAL_DASHBOARD_IDENTITY_POOL:1}}'
-        - Name: REACT_APP_DEVPORTAL_DASHBOARD_USER_POOL
-          Value: '{{resolve:ssm:DEVPORTAL_DASHBOARD_USER_POOL:1}}'
-        - Name: REACT_APP_DEVPORTAL_REGION
-          Value: '{{resolve:ssm:DEVPORTAL_REGION:1}}'
-      AutoBranchCreationConfig:
-        EnableAutoBranchCreation: False
-        EnableAutoBuild: True
-      BuildSpec: |-
-        version: 0.1
-        frontend:
-          phases:
-            preBuild:
-              commands:
-                - yarn install
-            build:
-              commands:
-                - yarn run build
-          artifacts:
-            baseDirectory: build
-            files:
-              - '**/*'
-          cache:
-            paths:
-              - node_modules/**/*
-      CustomRules:
-        - Source: /<*>
-          Target: /index.html
-          Status: '404'
-      IAMServiceRole: !GetAtt AmplifyRole.Arn
-
-  AmplifyDomain:
-    Type: AWS::Amplify::Domain
-    Properties:
-      DomainName: !Ref mainDomain
-      AppId: !GetAtt AmplifyApp.AppId
-      SubDomainSettings:
-        - Prefix: dashboard
-          BranchName: !GetAtt AmplifyBranch.BranchName
-
-  AmplifyBranch:
-    Type: AWS::Amplify::Branch
-    Properties:
-      BranchName: master
-      AppId: !GetAtt AmplifyApp.AppId
-      Description: master Branch
-      EnableAutoBuild: true
-      Tags:
-        - Key: Branch
-          Value: master
-
-  # DNSRecord:
-  #   Type: AWS::Route53::RecordSetGroup
-  #   Properties:
-  #     HostedZoneId: !FindInMap [envVars, hostedZoneId, !Ref stage]
-  #     RecordSets:
-  #     - Type: A
-  #       Name: !Ref DomainName
-  #       AliasTarget:
-  #         HostedZoneId: !GetAtt DomainName.DistributionHostedZoneId
-  #         DNSName: !GetAtt DomainName.DistributionDomainName
+      DistributionConfig:
+        Comment: Cloudfront Distribution pointing to S3 bucket
+        Origins:
+        - DomainName: !Select [2, !Split ["/", !GetAtt WebsiteBucket.WebsiteURL]]
+          Id: S3Origin
+          CustomOriginConfig:
+            HTTPPort: '80'
+            HTTPSPort: '443'
+            OriginProtocolPolicy: http-only
+        Enabled: true
+        HttpVersion: 'http2'
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - GET
+          - HEAD
+          Compress: true
+          TargetOriginId: S3Origin
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+        PriceClass: PriceClass_All
 
 Outputs:
-  DefaultDomain:
-    Value: !GetAtt AmplifyApp.DefaultDomain
-  
-  RepositoryUrl:
-    Value: !GetAtt Repository.CloneUrlHttp
-
+  BucketName:
+    Value: !Ref 'WebsiteBucket'
+    Description: Name of S3 bucket to hold website content
+  CloudfrontEndpoint:
+    Value: !GetAtt [WebsiteCloudfront, DomainName]
+    Description: Endpoint for Cloudfront distribution

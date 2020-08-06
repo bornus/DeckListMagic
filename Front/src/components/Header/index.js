@@ -9,9 +9,7 @@ import { setProfileOverlayOpened } from 'features/auth/authSlice';
 
 import './header.scss';
 
-const LogoSvg = (props) => (
-  <span>Best LOGO</span>
-);
+const LogoSvg = (props) => <span>Best LOGO</span>;
 
 const ProfileSvg = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" viewBox="0 0 22 27">
@@ -78,40 +76,46 @@ class Navigation extends React.Component {
   render() {
     const isLoggedIn = this.props.authData && this.props.authData.user && this.props.authData.user.signInUserSession;
     const { profileOverlayOpened } = this.props;
-    const user = this.props.authData && this.props.authData.user && this.props.authData.user.signInUserSession ? this.props.authData.user.signInUserSession.idToken.payload : null
+    const user =
+      this.props.authData && this.props.authData.user && this.props.authData.user.signInUserSession
+        ? this.props.authData.user.signInUserSession.idToken.payload
+        : null;
     const { transparent } = this.state;
 
     return (
-      <nav
-        className={classNames('header-menu', 'container-fluid', {
-          transparent,
-        })}
-        role="navigation"
-      >
-        <div className="header-menu__layout" ref={(node) => (this._navRef = node)}>
-          <div className="header-menu__container">
-            {/* <a className="header-menu__logo-container" href={'/'}>
+      <>
+        <nav
+          className={classNames('header-menu', 'container-fluid', {
+            transparent,
+          })}
+          role="navigation"
+        >
+          <div className="header-menu__layout" ref={(node) => (this._navRef = node)}>
+            <div className="header-menu__container">
+              {/* <a className="header-menu__logo-container" href={'/'}>
               <LogoSvg alt="logo" />
             </a> */}
-            <Link className="header-menu__logo-container" to={'/'}>
-              <LogoSvg alt="logo" />
-            </Link>
-            {isLoggedIn ? (
-              <div
-                ref={this._profileOpenerRef}
-                onClick={() => this.props.dispatch(setProfileOverlayOpened(true))}
-                className="header-menu__profile-container"
-              >
-                <ProfileSvg />
-                <ProfileOverlay
-                 open={profileOverlayOpened}
-                 close={() => this.props.dispatch(setProfileOverlayOpened(false))}
-                />
-              </div>
-            ): null}
+              <Link className="header-menu__logo-container" to={'/'}>
+                <LogoSvg alt="logo" />
+              </Link>
+              {isLoggedIn ? (
+                <div
+                  ref={this._profileOpenerRef}
+                  onClick={() => this.props.dispatch(setProfileOverlayOpened(true))}
+                  className="header-menu__profile-container"
+                >
+                  <ProfileSvg />
+                  <ProfileOverlay
+                    open={profileOverlayOpened}
+                    close={() => this.props.dispatch(setProfileOverlayOpened(false))}
+                  />
+                </div>
+              ) : null}
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+        <div style={{ height: '90px' }} />
+      </>
     );
   }
 }
