@@ -26,7 +26,7 @@ namespace RegisterPlayerToTournamentLambda
         /// <returns></returns>
         public APIGatewayProxyResponse FunctionHandler(RegisterEvent register, ILambdaContext context)
         {
-            var userUid = "45e9452f-1023-49fc-a84c-3466ae37ce5a";
+            var userUid = context.Identity.IdentityId;
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
 
             Table deckListTable = Table.LoadTable(client, Constantes.TableName);
@@ -68,12 +68,10 @@ namespace RegisterPlayerToTournamentLambda
                 [Constantes.DynamoCol.USER_ID] = userUid,
             };
 
-            batchWrite.AddDocumentToPut(registration);
+            var registrationTask = deckListTable.UpdateItemAsync(registration);
+            registrationTask.Wait();
 
-            var batch = batchWrite.ExecuteAsync();
-            batch.Wait();
-
-            context.Logger.LogLine("SRegistration complete.");
+            context.Logger.LogLine("Registration complete.");
 
             var headersDic = new Dictionary<string, string> { { "Content-type", "application/json" } };
 

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
@@ -9,6 +5,8 @@ using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using DeckList.Commons;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -25,7 +23,7 @@ namespace GetPlayerTournaments
         /// <returns></returns>
         public APIGatewayProxyResponse FunctionHandler(ILambdaContext context)
         {
-            var userUid = "45e9452f-1023-49fc-a84c-3466ae37ce5a";
+            var userUid = context.Identity.IdentityId;
             context.Logger.LogLine($"Beginning to search event for player {userUid} Event.");
 
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
@@ -59,11 +57,11 @@ namespace GetPlayerTournaments
                 QueryFilter tournamentFilter = new QueryFilter();
                 tournamentFilter.AddCondition(Constantes.DynamoCol.PK, QueryOperator.Equal, pkValues);
                 tournamentFilter.AddCondition(Constantes.DynamoCol.SK, QueryOperator.Equal, skValues);
-                Search searchtournaments = deckListTable.Query(tournamentFilter);
+                Search searchTournaments = deckListTable.Query(tournamentFilter);
 
                 do
                 {
-                    var set = searchtournaments.GetNextSetAsync();
+                    var set = searchTournaments.GetNextSetAsync();
                     set.Wait();
                     foreach (var tournamentDoc in set.Result)
                     {
