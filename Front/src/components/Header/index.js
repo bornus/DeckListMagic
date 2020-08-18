@@ -95,7 +95,7 @@ class Navigation extends React.Component {
               {/* <a className="header-menu__logo-container" href={'/'}>
               <LogoSvg alt="logo" />
             </a> */}
-              <Link className="header-menu__logo-container" to={'/'}>
+              <Link className="header-menu__logo-container" to="/">
                 <LogoSvg alt="logo" />
               </Link>
               {isLoggedIn ? (

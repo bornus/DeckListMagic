@@ -124,7 +124,7 @@ const authSlice = createSlice({
         ...initValuesCommonForm,
         email: action.payload,
         step: 1,
-      }
+      };
       // state.profileOverlayOpened = false;
     },
     signUpError(state: Auth, action: PayloadAction<any>) {
@@ -147,7 +147,7 @@ const authSlice = createSlice({
       state.signUpForm = {
         ...initialState.signUpForm,
         step: 2,
-      }
+      };
       // state.profileOverlayOpened = false;
     },
     confirmSignUpError(state: Auth, action: PayloadAction<any>) {
@@ -312,22 +312,19 @@ export const confirmSignIn = (cognitoUser: CognitoUser, code: string): AppThunk 
   }
 };
 
-export const signUp = (
-  email: string,
-  password: string,
-  firstname: string,
-  lastname: string,
-): AppThunk => async (dispatch: AppDispatch) => {
+export const signUp = (email: string, password: string, firstname: string, lastname: string): AppThunk => async (
+  dispatch: AppDispatch,
+) => {
   try {
     dispatch(authSlice.actions.signUpIn());
     const user = await awsAuth.signUp({
       username: email,
       password,
-      attributes: { 
+      attributes: {
         family_name: lastname,
         name: firstname,
       },
-    })
+    });
 
     dispatch(authSlice.actions.signUpSuccess(user));
   } catch (e) {
@@ -335,21 +332,18 @@ export const signUp = (
   }
 };
 
-export const signUpResendCode = ( email: string ): AppThunk => async () => {
+export const signUpResendCode = (email: string): AppThunk => async () => {
   try {
     await awsAuth.resendSignUp(email);
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 };
 
-export const confirmSignUp = (
-  email: string,
-  code: string,
-): AppThunk => async (dispatch: AppDispatch) => {
+export const confirmSignUp = (email: string, code: string): AppThunk => async (dispatch: AppDispatch) => {
   try {
     dispatch(authSlice.actions.confirmSignUpIn());
-    const user = await awsAuth.confirmSignUp(email, code)
+    const user = await awsAuth.confirmSignUp(email, code);
 
     dispatch(authSlice.actions.confirmSignUpSuccess());
   } catch (e) {

@@ -16,6 +16,9 @@ import ForgotPasswordAsk from 'features/auth/ForgotPasswordAsk';
 import ForgotPasswordCode from 'features/auth/ForgotPasswordCode';
 import ForgotPasswordNewPassword from 'features/auth/ForgotPasswordNewPassword';
 
+import HomePage from 'unauthentificatedPages/HomePage';
+import SignUp from 'unauthentificatedPages/SignUp';
+
 import 'react-responsive-modal/styles.css';
 
 export default function App(): JSX.Element {
@@ -37,9 +40,30 @@ export default function App(): JSX.Element {
     } else if (auth.forgotPasswordData && auth.forgotPasswordData.workflowStarted) {
       content = <ForgotPasswordAsk />;
     } else {
-      content = <SignIn />;
+      // Unauthentificated pages!
+      return (
+        <div className="app">
+          <Router>
+            <Header />
+            <div className="main">
+              <Switch>
+                <Route exact path="/">
+                  <HomePage />
+                </Route>
+                <Route exact path="/signUp">
+                  <SignUp />
+                </Route>
+                <Route path="/">
+                  <SignIn />
+                </Route>
+              </Switch>
+            </div>
+          </Router>
+        </div>
+      );
     }
   } else if (auth.authData && auth.authData.user && auth.authData.user.signInUserSession) {
+    // Authentificated pages!
     return (
       <div className="app">
         <Router>

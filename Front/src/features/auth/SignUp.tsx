@@ -51,12 +51,18 @@ export default function SignUp(): JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h1 className="">Sign in</h1>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="m-auto">
+      <h1 className="">Sign up</h1>
       <div className="error-message c8 my-3">{error?.message}</div>
       <TextField name="email" type="email" placeholder="Email" {...TextFieldProps} />
       <TextField name="password" type="password" placeholder="Password" autoComplete="off" {...TextFieldProps} />
-      <TextField name="passwordConfirmation" type="password" placeholder="Confirm your password" autoComplete="off" {...TextFieldProps} />
+      <TextField
+        name="passwordConfirmation"
+        type="password"
+        placeholder="Confirm your password"
+        autoComplete="off"
+        {...TextFieldProps}
+      />
       <TextField name="firstname" type="text" placeholder="Prénom" {...TextFieldProps} />
       <TextField name="lastname" type="text" placeholder="Nom" {...TextFieldProps} />
       <button type="submit" className="mt-4" disabled={!isValid}>

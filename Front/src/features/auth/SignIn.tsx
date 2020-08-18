@@ -24,7 +24,6 @@ export default function SignIn(): JSX.Element {
     register,
     handleSubmit,
     errors,
-    getValues,
     formState: { touched, isValid },
   } = useForm<Form>({
     validationSchema: schema,
@@ -35,7 +34,6 @@ export default function SignIn(): JSX.Element {
     touched,
     errors,
     inputRef: register,
-    values: getValues(),
   };
 
   const dispatch = useDispatch();
@@ -51,7 +49,7 @@ export default function SignIn(): JSX.Element {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="m-auto">
       <h1 className="">Sign in</h1>
       <div className="error-message c8 my-3">{error?.message}</div>
       <TextField name="email" type="email" placeholder="Email" {...TextFieldProps} />

@@ -11,7 +11,7 @@ export default (): JSX.Element => (
         Sign in
       </Button>
     </Link>
-    <Link to={'/signUp'}>
+    <Link to="/signUp">
       <Button variant="primary" className="mt-4" size="lg">
         Sign up
       </Button>
