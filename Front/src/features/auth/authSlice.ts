@@ -140,7 +140,7 @@ const authSlice = createSlice({
         loading: true,
       };
     },
-    confirmSignUpSuccess(state: Auth) {
+    confirmSignUpSuccess(state: Auth, action: PayloadAction<CognitoUser>) {
       // state.authData = {
       //   user: action.payload,
       // };
@@ -326,7 +326,7 @@ export const signUp = (email: string, password: string, firstname: string, lastn
       },
     });
 
-    dispatch(authSlice.actions.signUpSuccess(user));
+    dispatch(authSlice.actions.signUpSuccess(email));
   } catch (e) {
     dispatch(authSlice.actions.signUpError(e));
   }
@@ -345,7 +345,7 @@ export const confirmSignUp = (email: string, code: string): AppThunk => async (d
     dispatch(authSlice.actions.confirmSignUpIn());
     const user = await awsAuth.confirmSignUp(email, code);
 
-    dispatch(authSlice.actions.confirmSignUpSuccess());
+    dispatch(authSlice.actions.confirmSignUpSuccess(user));
   } catch (e) {
     dispatch(authSlice.actions.confirmSignUpError(e));
   }

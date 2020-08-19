@@ -31,7 +31,6 @@ export default function SignUp(): JSX.Element {
     register,
     handleSubmit,
     errors,
-    getValues,
     formState: { touched, isValid },
     watch,
   } = useForm<Form>({
@@ -46,7 +45,6 @@ export default function SignUp(): JSX.Element {
     touched,
     errors,
     inputRef: register,
-    values: getValues(),
   };
 
   const onSubmit = ({ email, code }: Form) => {
@@ -59,7 +57,7 @@ export default function SignUp(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h1 className="">Sign in</h1>
+      <h1 className="">Sign up: confirm your email</h1>
       <div className="error-message c8 my-3">{error?.message}</div>
       <TextField name="email" type="email" placeholder="Email" {...TextFieldProps} />
       <TextField name="code" type="text" placeholder="Code" autoComplete="off" {...TextFieldProps} />
