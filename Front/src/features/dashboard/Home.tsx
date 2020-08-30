@@ -1,13 +1,17 @@
 import React from 'react';
 import { API, Auth } from 'aws-amplify';
 
-const testApi = async (): Promise<void> => {
+export type TestApiType = {
+  body: object;
+  path: string;
+};
+
+const testApi = async ({ body, path }: TestApiType): Promise<void> => {
   try {
     const apiName = 'api';
-    const path = 'event';
     const Authorization = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`;
     const data = {
-      body: {},
+      body: body,
       headers: {
         Authorization,
       },
@@ -29,7 +33,24 @@ export default (): JSX.Element => {
   return (
     <div className="w-100">
       <h1>Home page</h1>
-      <button onClick={testApi}>Test api</button>
+      <button
+        onClick={(): Promise<void> =>
+          testApi({
+            path: 'event',
+            body: {
+              EventName: 'EventName-Test',
+              TournamentName: 'TournamentName-Test',
+              Format: 'Format-Test',
+              Date: new Date(),
+              EventId: 'EventId-Test',
+              TournamentId: 'TournamentId-Test',
+              RegisterCode: 'RegisterCode-Test',
+            },
+          })
+        }
+      >
+        Test api - Create event
+      </button>
     </div>
   );
 };
