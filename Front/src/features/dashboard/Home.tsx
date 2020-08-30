@@ -36,7 +36,7 @@ export default (): JSX.Element => {
       <button
         onClick={(): Promise<void> =>
           testApi({
-            path: 'event',
+            path: '/event',
             body: {
               EventName: 'EventName-Test',
               TournamentName: 'TournamentName-Test',
