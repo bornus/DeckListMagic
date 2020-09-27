@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import Magic, { Card } from 'mtgsdk-ts';
 
 import { AppThunk, AppDispatch } from 'authentificatedPages/store';
 import { RootState } from 'authentificatedPages/rootReducer';
-import { SearchCards, Card, Error } from './types';
+import { SearchCards, Error, CardSearchServerResponse } from './types';
 
 const initialState: SearchCards = {
   cardsFound: [],
@@ -43,15 +44,22 @@ export const searchCards = (name: string): AppThunk => async (
     dispatch(authSlice.actions.searchCards());
     console.log('Search with: ', name);
 
+    // See https://github.com/MagicTheGathering/mtg-sdk-typescript
+
     // const response = await axios.get(`https://api.scryfall.com/cards/search?order=cmc&q=${encodeURI(name)}`);
-    const { data } = await axios.request<Card[]>({
+    const {
+      data: { cards },
+    } = await axios.request<CardSearchServerResponse>({
       url: `https://api.magicthegathering.io/v1/cards?name=${encodeURI(name)}`,
       // url: `https://api.scryfall.com/cards/search?order=cmc&q=${encodeURI(name)}`,
-      // transformResponse: (r: CardSearchServerResponse) => r.data,
+      // transformResponse: (r: CardSearchServerResponse) => r.cards,
     });
 
+    // const cards = await Magic.Cards.where({ name: encodeURI(name) });
+
     // const { cardsFound } = getState().searchCards;
-    dispatch(authSlice.actions.searchCardsSuccess(data));
+    console.log('TEST', cards);
+    dispatch(authSlice.actions.searchCardsSuccess(cards));
   } catch (e) {
     dispatch(authSlice.actions.searchCardsError(e));
   }
