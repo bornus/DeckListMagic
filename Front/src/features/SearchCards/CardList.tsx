@@ -13,7 +13,6 @@ export default (): JSX.Element => {
 
   if (loading) return <Spinner animation="border" />;
 
-  console.log('Array', cardsFound);
   return (
     <div className={styles.cards}>
       {cardsFound.map((card, i) => (

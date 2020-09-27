@@ -36,29 +36,18 @@ export default authSlice.reducer;
 // For mock and demo
 const timeout = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const searchCards = (name: string): AppThunk => async (
-  dispatch: AppDispatch,
-  getState: () => RootState,
-): Promise<void> => {
+export const searchCards = (name: string): AppThunk => async (dispatch: AppDispatch): Promise<void> => {
   try {
     dispatch(authSlice.actions.searchCards());
-    console.log('Search with: ', name);
 
     // See https://github.com/MagicTheGathering/mtg-sdk-typescript
-
-    // const response = await axios.get(`https://api.scryfall.com/cards/search?order=cmc&q=${encodeURI(name)}`);
+    // const cards = await Magic.Cards.where({ name: encodeURI(name) });
     const {
       data: { cards },
     } = await axios.request<CardSearchServerResponse>({
       url: `https://api.magicthegathering.io/v1/cards?name=${encodeURI(name)}`,
-      // url: `https://api.scryfall.com/cards/search?order=cmc&q=${encodeURI(name)}`,
-      // transformResponse: (r: CardSearchServerResponse) => r.cards,
     });
 
-    // const cards = await Magic.Cards.where({ name: encodeURI(name) });
-
-    // const { cardsFound } = getState().searchCards;
-    console.log('TEST', cards);
     dispatch(authSlice.actions.searchCardsSuccess(cards));
   } catch (e) {
     dispatch(authSlice.actions.searchCardsError(e));
