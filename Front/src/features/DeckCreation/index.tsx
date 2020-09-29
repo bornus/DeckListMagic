@@ -13,8 +13,7 @@ export default (): JSX.Element => {
   const searchState = useSelector((state: RootState) => state.deckCreation);
   const { loading, error } = searchState;
 
-  const iniNewDeck = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    e.preventDefault();
+  const iniNewDeck = (): void => {
     dispatch(newDeck());
   };
 
