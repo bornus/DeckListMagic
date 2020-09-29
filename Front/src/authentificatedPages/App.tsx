@@ -8,7 +8,7 @@ import Navigation from 'components/Navigation';
 import { currentAuthenticatedUser } from 'features/auth/authSlice';
 import Home from 'features/dashboard/Home';
 import ClientCredentials from 'features/ClientCredentials';
-import SignIn from 'features/auth/SignIn';
+import SignIn from 'featufeatures/DeckCreation
 import TwoFactorAuthentication from 'features/auth/2FA';
 import NewPasswordRequired from 'features/auth/NewPasswordRequired';
 import TwoFactorAuthenticationSetup from 'features/auth/2FASetup';
