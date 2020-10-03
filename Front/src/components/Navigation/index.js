@@ -30,7 +30,7 @@ const Navigation = props => {
       <div className="navigation__container">
         <MenuLink path='/' text='Overview' />
         <MenuLink path='/client-credentials' text='Client credentials' />
-        <MenuLink path='/b' text='Sandbox' />
+        <MenuLink path='/deck-creation' text='Creation de deck' />
         <MenuLink path='/c' text='Authorization Gateway' />
         <MenuLink path='/d' text='Api reference' />
       </div>
