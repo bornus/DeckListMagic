@@ -48,7 +48,12 @@ export const searchCards = (name: string): AppThunk => async (dispatch: AppDispa
       url: `https://api.magicthegathering.io/v1/cards?name=${encodeURI(name)}`,
     });
 
-    dispatch(authSlice.actions.searchCardsSuccess(cards));
+    dispatch(
+      authSlice.actions.searchCardsSuccess(
+        // Filter all cards to remove CardName duplicates
+        cards.filter(({ name: refName }, pos, arr) => arr.map(({ name }) => name).indexOf(refName) === pos),
+      ),
+    );
   } catch (e) {
     dispatch(authSlice.actions.searchCardsError(e));
   }
