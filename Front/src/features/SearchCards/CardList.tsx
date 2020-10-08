@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 
 import { RootState } from 'authentificatedPages/rootReducer';
-import Card from './Card';
-
-import styles from './card-list.module.scss';
+import Cards from 'components/Cards';
 
 export default (): JSX.Element => {
   const searchState = useSelector((state: RootState) => state.searchCards);
@@ -13,11 +11,5 @@ export default (): JSX.Element => {
 
   if (loading) return <Spinner animation="border" />;
 
-  return (
-    <div className={styles.cards}>
-      {cardsFound.map((card, i) => (
-        <Card card={card} key={i} />
-      ))}
-    </div>
-  );
+  return <Cards cards={cardsFound} />;
 };
