@@ -8,6 +8,7 @@ import Navigation from 'components/Navigation';
 import { currentAuthenticatedUser } from 'features/auth/authSlice';
 import Home from 'features/dashboard/Home';
 import ClientCredentials from 'features/ClientCredentials';
+import SearchCards from 'features/SearchCards';
 import SignIn from 'features/auth/SignIn';
 import TwoFactorAuthentication from 'features/auth/2FA';
 import NewPasswordRequired from 'features/auth/NewPasswordRequired';
@@ -73,6 +74,9 @@ export default function App(): JSX.Element {
             <Switch>
               <Route path="/client-credentials">
                 <ClientCredentials />
+              </Route>
+              <Route path="/search">
+                <SearchCards />
               </Route>
               <Route path="/">
                 <Home />

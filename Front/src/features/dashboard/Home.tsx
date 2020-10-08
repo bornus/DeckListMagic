@@ -33,6 +33,7 @@ export default (): JSX.Element => {
   return (
     <div className="w-100">
       <h1>Home page</h1>
+      Action pour tester la création d'un event :
       <button
         onClick={(): Promise<void> =>
           testApi({
