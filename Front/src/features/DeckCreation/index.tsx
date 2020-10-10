@@ -3,9 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 
 import { RootState } from 'authentificatedPages/rootReducer';
+import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
+import MainDeck from './MainDeck';
 
 import { newDeck } from './slice';
+import styles from './style.module.scss';
 
 export default (): JSX.Element => {
   const dispatch = useDispatch();
@@ -27,6 +30,14 @@ export default (): JSX.Element => {
         <Button variant="primary" className="mt-4" size="lg" onClick={iniNewDeck}>
           Init new deck
         </Button>
+        La suite
+      </div>
+
+      <div className={styles.container}>
+        <div className={styles.searchContainer}>
+          <SearchCards />
+        </div>
+        <MainDeck className={styles.deckContainer} /> 
       </div>
     </div>
   );
