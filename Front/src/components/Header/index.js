@@ -37,7 +37,7 @@ const ProfileSvg = () => (
   </svg>
 );
 
-class Navigation extends React.Component {
+class Header extends React.Component {
   _isMounted = false;
   _navRef = null;
   _burgerRef = null;
@@ -146,4 +146,4 @@ function mapStateToProps(state) {
   return auth;
 }
 
-export default connect(mapStateToProps)(Navigation);
+export default connect(mapStateToProps)(Header);
