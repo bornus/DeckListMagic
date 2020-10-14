@@ -1,12 +1,13 @@
 .card {
-  position: relative;
-  flex: 1 0 auto;
+  // position: relative;
+  // flex: 1 0 auto;
   margin: 1rem;
   color: #fff;
   cursor: pointer;
-  width: 50px;
-  
+  width: 100%;
+
   &-image {
-    height: 100%;
+    width: 50px;
+    height: auto;
   }
 }

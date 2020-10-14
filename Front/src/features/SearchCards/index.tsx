@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Card } from 'mtgsdk-ts';
 
 import { RootState } from 'authentificatedPages/rootReducer';
 import TextField from 'components/TextField';
@@ -8,7 +9,19 @@ import TextField from 'components/TextField';
 import { searchCards } from './slice';
 import CardList from './CardList';
 
-export default (): JSX.Element => {
+type AppProps = {
+  canAddCard?: (card: Card) => boolean;
+  addCard?: (card: Card) => void;
+  canRemoveCard?: (card: Card) => boolean;
+  removeCard?: (card: Card) => void;
+};
+
+export default ({
+  canAddCard = (): boolean => false,
+  addCard = (): null => null,
+  canRemoveCard = (): boolean => false,
+  removeCard = (): null => null,
+}: AppProps): JSX.Element => {
   const dispatch = useDispatch();
   const searchState = useSelector((state: RootState) => state.searchCards);
   const { loading, error } = searchState;
@@ -22,8 +35,7 @@ export default (): JSX.Element => {
     <>
       Rechercher une carte
       <TextField name="cardText" type="text" placeholder="Force of will" errors={{}} onBlur={onUpdate} />
-      <CardList />
-      {/* {loading ? <Spinner animation="border" /> : null} */}
+      <CardList canAddCard={canAddCard} addCard={addCard} canRemoveCard={canRemoveCard} removeCard={removeCard} />
     </>
   );
 };

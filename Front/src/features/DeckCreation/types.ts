@@ -5,8 +5,15 @@ export interface EnhancedCard extends Card {
   isLoaded?: boolean;
 }
 
+export enum SelectedDeck {
+  main,
+  side,
+}
+
 export interface Deck {
   type: string;
+  selected: SelectedDeck;
+
   mainDeck: EnhancedCard[];
   sideDeck: EnhancedCard[];
 }

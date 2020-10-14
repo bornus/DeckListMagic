@@ -13,5 +13,5 @@ export default ({ className }: AppProps): JSX.Element => {
   if (loading) return <Spinner animation="border" className={className} />;
   if (!deck || !deck.mainDeck || !deck.mainDeck.length) return <div className={className}>No card</div>;
 
-  return <Cards cards={deck.mainDeck} className={className} />;
+  return <Cards cards={deck.mainDeck} className={className} small />;
 };

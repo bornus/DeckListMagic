@@ -8,9 +8,12 @@ type AppProps = {
 };
 export default ({ card }: AppProps): JSX.Element => (
   <div className={styles.card}>
-    <img
-      className={styles['card-image']}
-      src={card.imageUrl || 'https://via.placeholder.com/50x70.png?text=Image non trouvée'}
-    />
+    <span className={styles['card-imageContainer']}>
+      <img
+        className={styles['card-image']}
+        src={card.imageUrl || 'https://via.placeholder.com/50x70.png?text=Image non trouvée'}
+      />
+    </span>
+    {card.name}
   </div>
 );
