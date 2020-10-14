@@ -70,7 +70,7 @@ export default function App(): JSX.Element {
       <div className="app">
         <Router>
           <Header />
-          <Navigation />
+          {/* <Navigation /> */}
           <div className="main">
             <Switch>
               <Route path="/client-credentials">
