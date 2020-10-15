@@ -8,6 +8,7 @@ import TextField from 'components/TextField';
 
 import { searchCards } from './slice';
 import CardList from './CardList';
+import styles from './style.module.scss';
 
 type AppProps = {
   canAddCard?: (card: Card) => boolean;
@@ -34,7 +35,14 @@ export default ({
   return (
     <>
       Rechercher une carte
-      <TextField name="cardText" type="text" placeholder="Force of will" errors={{}} onBlur={onUpdate} />
+      <TextField
+        className={styles['searchCards__input']}
+        name="cardText"
+        type="text"
+        placeholder="Force of will"
+        errors={{}}
+        onBlur={onUpdate}
+      />
       <CardList canAddCard={canAddCard} addCard={addCard} canRemoveCard={canRemoveCard} removeCard={removeCard} />
     </>
   );

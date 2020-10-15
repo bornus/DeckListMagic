@@ -115,7 +115,7 @@ class Header extends React.Component {
               {isLoggedIn ? (
                 <div>
                   <MenuLink path="/" text="Overview" />
-                  <MenuLink path="/client-credentials" text="Client credentials" />
+                  <MenuLink path="/search" text="Rechercher une carte" />
                   <MenuLink path="/deck-creation" text="Creation de deck" />
                 </div>
               ) : null}

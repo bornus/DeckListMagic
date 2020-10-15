@@ -2,15 +2,16 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import { Card } from 'mtgsdk-ts';
+import classNames from 'classnames';
 
 import { RootState } from 'authentificatedPages/rootReducer';
 import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
 import MainDeck from './MainDeck';
 
-import { newDeck, addCardToMainDeck, addCardToSideDeck } from './slice';
+import { newDeck, addCardToMainDeck, addCardToSideDeck, removeCardToMainDeck, removeCardToSideDeck } from './slice';
 import styles from './style.module.scss';
-import { SelectedDeck, EnhancedCard } from './types';
+import { SelectedDeck } from './types';
 
 export default (): JSX.Element => {
   const dispatch = useDispatch();
@@ -48,8 +49,8 @@ export default (): JSX.Element => {
     if (!deck) return;
     const { selected } = deck;
 
-    if (selected === SelectedDeck.main) dispatch(addCardToMainDeck(card));
-    else dispatch(addCardToSideDeck(card));
+    if (selected === SelectedDeck.main) dispatch(removeCardToMainDeck(card));
+    else dispatch(removeCardToSideDeck(card));
   };
 
   return (
@@ -76,7 +77,7 @@ export default (): JSX.Element => {
               removeCard={removeCard}
             />
           </div>
-          <MainDeck className={styles.deckContainer} />
+          <MainDeck className={classNames(styles.deckContainer, 'bd-sidebar')} />
         </div>
       ) : null}
     </div>

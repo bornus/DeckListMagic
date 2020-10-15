@@ -42,7 +42,7 @@ export default ({
         {canRemoveCard(card) ? (
           <li className={styles['card-delete']}>
             <button onClick={(): void => removeCard(card)}>
-              <i className="fas fa-delete" aria-hidden="true"></i> Add
+              <i className="fas fa-delete" aria-hidden="true"></i> Remove
             </button>
           </li>
         ) : null}

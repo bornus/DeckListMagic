@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Card } from 'mtgsdk-ts';
 
 import { DeckCreation, EnhancedCard, SelectedDeck } from './types';
 
@@ -21,17 +22,49 @@ const slice = createSlice({
         sideDeck: [],
       };
     },
-    addCardToMainDeck(state: DeckCreation, action: PayloadAction<EnhancedCard>): void {
-      state.loading = false;
-      state.deck?.mainDeck.push(action.payload);
+    addCardToMainDeck(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
+      if (state.deck) {
+        const index = state.deck.mainDeck.map(({ id }) => id).indexOf(action.payload.id);
+        if (index > -1) {
+          state.deck.mainDeck[index].quantity += 1;
+        } else state.deck.mainDeck.push({ ...action.payload, quantity: 1 });
+      }
     },
-    addCardToSideDeck(state: DeckCreation, action: PayloadAction<EnhancedCard>): void {
-      state.loading = false;
-      state.deck?.sideDeck.push(action.payload);
+    addCardToSideDeck(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
+      if (state.deck) {
+        const index = state.deck.sideDeck.map(({ id }) => id).indexOf(action.payload.id);
+        if (index > -1) {
+          state.deck.sideDeck[index].quantity += 1;
+        } else state.deck.sideDeck.push({ ...action.payload, quantity: 1 });
+      }
+    },
+    removeCardToMainDeck(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
+      if (state.deck) {
+        const index = state.deck.mainDeck.map(({ id }) => id).indexOf(action.payload.id);
+        if (index > -1) {
+          if (state.deck.mainDeck[index].quantity > 1) state.deck.mainDeck[index].quantity -= 1;
+          else state.deck.mainDeck.splice(index, 1);
+        }
+      }
+    },
+    removeCardToSideDeck(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
+      if (state.deck) {
+        const index = state.deck.sideDeck.map(({ id }) => id).indexOf(action.payload.id);
+        if (index > -1) {
+          if (state.deck.sideDeck[index].quantity > 1) state.deck.sideDeck[index].quantity -= 1;
+          else state.deck.sideDeck.splice(index, 1);
+        }
+      }
     },
   },
 });
 
 export default slice.reducer;
 
-export const { newDeck, addCardToMainDeck, addCardToSideDeck } = slice.actions;
+export const {
+  newDeck,
+  addCardToMainDeck,
+  addCardToSideDeck,
+  removeCardToMainDeck,
+  removeCardToSideDeck,
+} = slice.actions;
