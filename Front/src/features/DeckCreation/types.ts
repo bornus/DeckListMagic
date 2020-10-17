@@ -6,21 +6,33 @@ export interface EnhancedCard extends Card {
   quantity: number;
 }
 
-export enum SelectedDeck {
-  main,
-  side,
-}
-
-export interface Deck {
+export interface DeckConfig {
   type: string;
-  selected: SelectedDeck;
+  listCount: number;
+  // lists: EnhancedCard[][];
+  listNames: string[];
 
-  mainDeck: EnhancedCard[];
-  sideDeck: EnhancedCard[];
+  hasCommander: boolean;
+  canAddCard: (Card: Card) => boolean;
+  minGround: number | null;
+  maxGround: number | null;
+  maxCardsPerName: number | null;
+  minCards: number | null;
+  maxCards: number | null;
 }
+
+// export interface Deck {
+//   type: string;
+//   selected: SelectedDeck;
+
+//   mainDeck: EnhancedCard[];
+//   sideDeck: EnhancedCard[];
+// }
 
 export interface DeckCreation {
-  deck?: Deck;
+  deckConfig?: DeckConfig;
+  lists: EnhancedCard[][];
+  selectedList: number;
   loading?: boolean;
   error?: Error;
 }

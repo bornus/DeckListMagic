@@ -9,47 +9,32 @@ import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
 import Deck from './Deck';
 
-import { newDeck, addCardToMainDeck, addCardToSideDeck, removeCardToMainDeck, removeCardToSideDeck } from './slice';
+import { newDeck, addCard, removeCard } from './slice';
 import styles from './style.module.scss';
-import { SelectedDeck } from './types';
+import { Commander } from './deckTypes/commander';
+import { Test } from './deckTypes/test';
 
 export default (): JSX.Element => {
   const dispatch = useDispatch();
   const searchState = useSelector((state: RootState) => state.deckCreation);
-  const { deck, loading, error } = searchState;
+  const { deckConfig, lists, selectedList } = searchState;
 
-  const iniNewDeck = (): void => {
-    dispatch(newDeck());
+  const iniCommanderDeck = (): void => {
+    dispatch(newDeck(new Commander()));
+  };
+  const iniTestDeck = (): void => {
+    dispatch(newDeck(new Test()));
   };
 
-  let currentDeck: string[] = [];
-  if (deck) {
-    const { selected, mainDeck, sideDeck } = deck;
-    currentDeck = (selected === SelectedDeck.side ? sideDeck : mainDeck).map(({ name }) => name);
-  }
-
+  const currentDeck = lists[selectedList].map(({ name }) => name);
   const canAddCard = (card: Card): boolean => {
-    if (!deck) return false;
+    if (!deckConfig) return false;
     return true;
     // return currentDeck.indexOf(card.id) == -1;
   };
-  const addCard = (card: Card): void => {
-    if (!deck) return;
-    const { selected } = deck;
-
-    if (selected === SelectedDeck.main) dispatch(addCardToMainDeck(card));
-    else dispatch(addCardToSideDeck(card));
-  };
   const canRemoveCard = (card: Card): boolean => {
-    if (!deck) return false;
+    if (!deckConfig) return false;
     return currentDeck.indexOf(card.name) >= 0;
-  };
-  const removeCard = (card: Card): void => {
-    if (!deck) return;
-    const { selected } = deck;
-
-    if (selected === SelectedDeck.main) dispatch(removeCardToMainDeck(card));
-    else dispatch(removeCardToSideDeck(card));
   };
 
   return (
@@ -57,20 +42,27 @@ export default (): JSX.Element => {
       <div>Deck name</div>
       <div>
         Deck action (save, load, ...)
-        <Button variant="primary" className="mt-4" size="lg" onClick={iniNewDeck}>
-          Init new deck
+        <Button variant="primary" className="mt-4" size="lg" onClick={iniCommanderDeck}>
+          Init commander deck
+        </Button>
+        <Button variant="primary" className="mt-4" size="lg" onClick={iniTestDeck}>
+          Init test deck
         </Button>
         La suite
       </div>
 
-      {deck ? (
+      {deckConfig ? (
         <div className={styles.container}>
           <div className={styles.searchContainer}>
             <SearchCards
               canAddCard={canAddCard}
-              addCard={addCard}
+              addCard={(card: Card): void => {
+                dispatch(addCard(card));
+              }}
               canRemoveCard={canRemoveCard}
-              removeCard={removeCard}
+              removeCard={(card: Card): void => {
+                dispatch(removeCard(card));
+              }}
             />
           </div>
           <Deck />

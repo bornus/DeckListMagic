@@ -7,11 +7,11 @@ import Cards from 'components/Cards';
 
 type AppProps = { className?: string | undefined };
 export default ({ className }: AppProps): JSX.Element => {
-  const searchState = useSelector((state: RootState) => state.deckCreation);
-  const { loading, deck } = searchState;
+  const state = useSelector((state: RootState) => state.deckCreation);
+  const { loading, deckConfig, lists, selectedList } = state;
 
   if (loading) return <Spinner animation="border" className={className} />;
-  if (!deck || !deck.mainDeck || !deck.mainDeck.length) return <div className={className}>No card</div>;
+  if (!deckConfig || !lists[selectedList].length) return <div className={className}>No card</div>;
 
-  return <Cards cards={deck.mainDeck} className={className} small />;
+  return <Cards cards={lists[selectedList]} className={className} small />;
 };
