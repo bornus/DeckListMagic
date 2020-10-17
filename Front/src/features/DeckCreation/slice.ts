@@ -56,6 +56,11 @@ const slice = createSlice({
         }
       }
     },
+    selectDeck(state: DeckCreation, action: PayloadAction<SelectedDeck>): void {
+      if (state.deck) {
+        state.deck.selected = action.payload;
+      }
+    },
   },
 });
 
@@ -67,4 +72,5 @@ export const {
   addCardToSideDeck,
   removeCardToMainDeck,
   removeCardToSideDeck,
+  selectDeck,
 } = slice.actions;

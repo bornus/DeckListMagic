@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { RootState } from 'authentificatedPages/rootReducer';
 import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
-import MainDeck from './MainDeck';
+import Deck from './Deck';
 
 import { newDeck, addCardToMainDeck, addCardToSideDeck, removeCardToMainDeck, removeCardToSideDeck } from './slice';
 import styles from './style.module.scss';
@@ -25,14 +25,13 @@ export default (): JSX.Element => {
   let currentDeck: string[] = [];
   if (deck) {
     const { selected, mainDeck, sideDeck } = deck;
-
-    if (selected === SelectedDeck.side) currentDeck = sideDeck.map(({ id }) => id);
-    currentDeck = mainDeck.map(({ id }) => id);
+    currentDeck = (selected === SelectedDeck.side ? sideDeck : mainDeck).map(({ name }) => name);
   }
 
   const canAddCard = (card: Card): boolean => {
     if (!deck) return false;
-    return currentDeck.indexOf(card.id) == -1;
+    return true;
+    // return currentDeck.indexOf(card.id) == -1;
   };
   const addCard = (card: Card): void => {
     if (!deck) return;
@@ -43,7 +42,7 @@ export default (): JSX.Element => {
   };
   const canRemoveCard = (card: Card): boolean => {
     if (!deck) return false;
-    return currentDeck.indexOf(card.id) >= 0;
+    return currentDeck.indexOf(card.name) >= 0;
   };
   const removeCard = (card: Card): void => {
     if (!deck) return;
@@ -55,10 +54,7 @@ export default (): JSX.Element => {
 
   return (
     <div>
-      <div>Rechercher une carte</div>
       <div>Deck name</div>
-      <div>Main deck</div>
-      <div>Side deck</div>
       <div>
         Deck action (save, load, ...)
         <Button variant="primary" className="mt-4" size="lg" onClick={iniNewDeck}>
@@ -77,7 +73,7 @@ export default (): JSX.Element => {
               removeCard={removeCard}
             />
           </div>
-          <MainDeck className={classNames(styles.deckContainer, 'bd-sidebar')} />
+          <Deck />
         </div>
       ) : null}
     </div>
