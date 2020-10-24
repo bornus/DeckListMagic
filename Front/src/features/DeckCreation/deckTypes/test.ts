@@ -1,7 +1,11 @@
 import { Card } from 'mtgsdk-ts';
-import { EnhancedCard, Deck } from '../types';
+import BaseDeckType from './baseDeckType';
 
-export class Test implements Deck {
+export default class Test extends BaseDeckType {
+  constructor() {
+    super();
+  }
+
   type = 'Test';
   listCount = 2;
   listNames: string[] = ['Main', 'Side'];
@@ -10,22 +14,11 @@ export class Test implements Deck {
 
   blackListedCards: string[] = [];
 
-  canAddCard = (card: Card): boolean => {
-    // Un seul exemplaire de chaque carte (à l'exception des terrains de base)
-
-    // 9 cartes faisant référence à « playing for ante »
-    // 25 cartes avec le type « Conspiracy »
-
-    // Toutes les cartes doivent correspondre à l'identité couleur du commandant
-    // colors: ["Green"]
-
-    return true;
-  };
+  // canAddCard = (card: Card, listIndex: number): boolean => super.canAddCard(card, listIndex);
 
   minGround = 0;
-  maxGround = 99;
+  maxGround = 100;
   maxCardsPerName = 10;
-  minCards = 99;
-  maxCards = 150;
-  // lists: EnhancedCard[][] = [[], []];
+  minCards = 100;
+  maxCards = 100;
 }

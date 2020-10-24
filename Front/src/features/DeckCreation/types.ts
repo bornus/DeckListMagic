@@ -7,31 +7,23 @@ export interface EnhancedCard extends Card {
 }
 
 export interface DeckConfig {
+  lists: EnhancedCard[][];
   type: string;
   listCount: number;
-  // lists: EnhancedCard[][];
   listNames: string[];
 
   hasCommander: boolean;
-  canAddCard: (Card: Card) => boolean;
-  minGround: number | null;
-  maxGround: number | null;
-  maxCardsPerName: number | null;
-  minCards: number | null;
-  maxCards: number | null;
+
+  canAddCard: (Card: Card, listIndex: number) => boolean;
+  minGround: number;
+  maxGround: number;
+  maxCardsPerName: number;
+  minCards: number;
+  maxCards: number;
 }
-
-// export interface Deck {
-//   type: string;
-//   selected: SelectedDeck;
-
-//   mainDeck: EnhancedCard[];
-//   sideDeck: EnhancedCard[];
-// }
 
 export interface DeckCreation {
   deckConfig?: DeckConfig;
-  lists: EnhancedCard[][];
   selectedList: number;
   loading?: boolean;
   error?: Error;

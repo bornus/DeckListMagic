@@ -8,12 +8,12 @@ import Cards from './InlineCards';
 type AppProps = { className?: string | undefined };
 export default ({ className }: AppProps): JSX.Element => {
   const state = useSelector((state: RootState) => state.deckCreation);
-  const { loading, deckConfig, lists, selectedList } = state;
+  const { loading, deckConfig, selectedList } = state;
 
   if (loading) return <Spinner animation="border" className={className} />;
   if (!deckConfig) return <div className={className}>No deck config</div>;
 
-  const { maxCards } = deckConfig;
+  const { lists, maxCards } = deckConfig;
 
   if (!lists[selectedList].length)
     return (

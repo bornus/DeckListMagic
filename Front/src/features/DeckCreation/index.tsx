@@ -11,13 +11,13 @@ import Deck from './Deck';
 
 import { newDeck, addCard, removeCard } from './slice';
 import styles from './style.module.scss';
-import { Commander } from './deckTypes/commander';
-import { Test } from './deckTypes/test';
+import Commander from './deckTypes/commander';
+import Test from './deckTypes/test';
 
-export default (): JSX.Element => {
+export default (): JSX.Element | null => {
   const dispatch = useDispatch();
-  const searchState = useSelector((state: RootState) => state.deckCreation);
-  const { deckConfig, lists, selectedList } = searchState;
+  const state = useSelector((state: RootState) => state.deckCreation);
+  const { deckConfig, selectedList } = state;
 
   const iniCommanderDeck = (): void => {
     dispatch(newDeck(new Commander()));
@@ -26,7 +26,12 @@ export default (): JSX.Element => {
     dispatch(newDeck(new Test()));
   };
 
-  const currentDeck = lists[selectedList].map(({ name }) => name);
+  let currentDeck: string[];
+  if (deckConfig) {
+    const { lists } = deckConfig;
+    currentDeck = lists[selectedList].map(({ name }) => name);
+  }
+
   const canAddCard = (card: Card): boolean => {
     if (!deckConfig) return false;
     return true;

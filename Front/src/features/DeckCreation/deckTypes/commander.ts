@@ -1,14 +1,15 @@
 // https://magic.wizards.com/fr/content/commander-format
 
 import { Card } from 'mtgsdk-ts';
-import { EnhancedCard, DeckConfig } from '../types';
+import BaseDeckType from './baseDeckType';
 
-export class Commander implements DeckConfig {
+export default class Commander extends BaseDeckType {
   type = 'Commandeur';
   listCount = 1;
   listNames: string[] = [];
 
   hasCommander = true;
+  commander = null;
 
   blackListedCards: string[] = [
     'Ancestral Recall',
@@ -55,11 +56,15 @@ export class Commander implements DeckConfig {
     "Yawgmoth's Bargain",
   ];
 
-  canAddCard = (card: Card): boolean => {
-    // Un seul exemplaire de chaque carte (à l'exception des terrains de base)
+  canAddCard = (card: Card, listIndex: number): boolean => {
+    // Have to add first the commander!
+    if (!this.commander) return false;
 
-    // 9 cartes faisant référence à « playing for ante »
-    // 25 cartes avec le type « Conspiracy »
+    // if (!super.canAddCard(card, listIndex)) return false;
+
+    // if (this.commander !== null) console.log(this.commander.colors);
+
+    // Un seul exemplaire de chaque carte (à l'exception des terrains de base)
 
     // Toutes les cartes doivent correspondre à l'identité couleur du commandant
     // colors: ["Green"]
@@ -72,5 +77,4 @@ export class Commander implements DeckConfig {
   maxCardsPerName = 1;
   minCards = 99;
   maxCards = 99;
-  // lists: EnhancedCard[][] = [[]];
 }
