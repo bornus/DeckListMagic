@@ -23,7 +23,7 @@ export default ({
       className={styles['card-image']}
       src={card.imageUrl || 'https://via.placeholder.com/265x370.png?text=Image non trouvée'}
     /> */}
-    <CardImage className={styles['card-image']} url={card.imageUrl} />
+    <CardImage alt={card.name} className={styles['card-image']} url={card.imageUrl} />
 
     <div className={styles['card-type']}>
       <span className="visually-hidden">Info?</span>

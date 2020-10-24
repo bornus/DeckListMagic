@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import Magic, { Card } from 'mtgsdk-ts';
+import { Card } from 'mtgsdk-ts';
 
 import { AppThunk, AppDispatch } from 'authentificatedPages/store';
-import { RootState } from 'authentificatedPages/rootReducer';
 import { SearchCards, Error, CardSearchServerResponse } from './types';
 
 const initialState: SearchCards = {
@@ -34,7 +33,7 @@ const authSlice = createSlice({
 export default authSlice.reducer;
 
 // For mock and demo
-const timeout = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+// const timeout = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const searchCards = (name: string): AppThunk => async (dispatch: AppDispatch): Promise<void> => {
   try {

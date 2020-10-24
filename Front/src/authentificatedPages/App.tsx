@@ -27,7 +27,7 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     dispatch(currentAuthenticatedUser());
-  }, []);
+  });
 
   const auth = useSelector((state: RootState) => state.auth);
 

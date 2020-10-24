@@ -19,15 +19,15 @@ const DeckTabs = (): JSX.Element | null => {
     <ul className="nav nav-pills nav-fill">
       {listNames.map((name, key) => (
         <li className="nav-item" key={key}>
-          <a
+          <div
+            role="link"
             className={classNames('nav-link active', key === selectedList ? 'active' : '')}
             onClick={(): void => {
               dispatch(selectDeck(key));
             }}
-            href="#"
           >
             {name}
-          </a>
+          </div>
         </li>
       ))}
     </ul>

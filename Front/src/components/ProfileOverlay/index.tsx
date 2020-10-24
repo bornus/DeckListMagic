@@ -28,7 +28,7 @@ function ProfileOverlay({ close, open }: Props) {
     return () => {
       document.removeEventListener('mousedown', handleClick);
     };
-  }, []);
+  });
 
   const email =
     auth.authData && auth.authData.user && auth.authData.user.signInUserSession

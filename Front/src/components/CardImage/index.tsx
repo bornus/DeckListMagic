@@ -7,7 +7,8 @@ import styles from './style.module.scss';
 
 type AppProps = {
   url: string;
+  alt: string;
   className: string;
 };
-export default ({ url, className }: AppProps): JSX.Element =>
-  url ? <img className={classnames(styles['card-image'], className)} src={url} /> : <NoCard />;
+export default ({ url, alt, className }: AppProps): JSX.Element =>
+  url ? <img alt={alt} className={classnames(styles['card-image'], className)} src={url} /> : <NoCard alt={alt} />;

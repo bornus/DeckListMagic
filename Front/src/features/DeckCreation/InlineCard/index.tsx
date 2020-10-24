@@ -21,6 +21,7 @@ export default ({ card }: AppProps): JSX.Element | null => {
     <div className={styles.card}>
       <span className={styles['card-imageContainer']}>
         <img
+          alt={card.name}
           className={styles['card-image']}
           src={card.imageUrl || 'https://via.placeholder.com/50x70.png?text=Image non trouvée'}
         />

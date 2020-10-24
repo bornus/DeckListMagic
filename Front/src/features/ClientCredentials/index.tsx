@@ -9,12 +9,12 @@ import DeleteProjectModal from 'features/ClientCredentials/DeleteProjectModal';
 
 function ClientCredentials(): JSX.Element {
   const dispatch = useDispatch();
-  const { projects, loading, error, deleteModal } = useSelector((state: RootState) => state.clientCredentials);
+  const { projects, loading, deleteModal } = useSelector((state: RootState) => state.clientCredentials);
   const { opened } = deleteModal;
 
   useEffect(() => {
     dispatch(listProjects());
-  }, []);
+  });
 
   let content = <div>Loading...</div>;
 

@@ -1,11 +1,6 @@
-import { Card } from 'mtgsdk-ts';
 import BaseDeckType from './baseDeckType';
 
 export default class Test extends BaseDeckType {
-  constructor() {
-    super();
-  }
-
   type = 'Test';
   listCount = 2;
   listNames: string[] = ['Main', 'Side'];

@@ -317,7 +317,7 @@ export const signUp = (email: string, password: string, firstname: string, lastn
 ) => {
   try {
     dispatch(authSlice.actions.signUpIn());
-    const user = await awsAuth.signUp({
+    await awsAuth.signUp({
       username: email,
       password,
       attributes: {

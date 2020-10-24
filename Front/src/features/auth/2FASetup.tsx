@@ -59,7 +59,7 @@ export default function TwoFactorAuthentication(): JSX.Element {
       throw new Error('No user');
     }
     dispatch(setupTOTP(auth.authData?.user));
-  }, []);
+  });
 
   const handleCancel = () => dispatch(signOut());
   const [copied, setCopied] = useState(false);
