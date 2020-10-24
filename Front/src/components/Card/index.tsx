@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from 'mtgsdk-ts';
 
 import styles from './style.module.scss';
+import CardImage from 'components/CardImage';
 
 type AppProps = {
   card: Card;
@@ -18,10 +19,11 @@ export default ({
   removeCard = (): null => null,
 }: AppProps): JSX.Element => (
   <div className={styles.card}>
-    <img
+    {/* <img
       className={styles['card-image']}
       src={card.imageUrl || 'https://via.placeholder.com/265x370.png?text=Image non trouvée'}
-    />
+    /> */}
+    <CardImage className={styles['card-image']} url={card.imageUrl} />
 
     <div className={styles['card-type']}>
       <span className="visually-hidden">Info?</span>

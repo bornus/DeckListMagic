@@ -19,7 +19,7 @@ const slice = createSlice({
   reducers: {
     newDeck(state: DeckCreation, action: PayloadAction<DeckConfig>): void {
       state.loading = false;
-      state.deckConfig = action.payload;
+      state.deckConfig = { ...action.payload };
       state.lists = Array(action.payload.listCount).fill([]);
       state.selectedList = 0;
     },

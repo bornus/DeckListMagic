@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 
 import { RootState } from 'authentificatedPages/rootReducer';
-import Cards from 'components/Cards';
+import Cards from './InlineCards';
 
 type AppProps = { className?: string | undefined };
 export default ({ className }: AppProps): JSX.Element => {
@@ -11,7 +11,26 @@ export default ({ className }: AppProps): JSX.Element => {
   const { loading, deckConfig, lists, selectedList } = state;
 
   if (loading) return <Spinner animation="border" className={className} />;
-  if (!deckConfig || !lists[selectedList].length) return <div className={className}>No card</div>;
+  if (!deckConfig) return <div className={className}>No deck config</div>;
 
-  return <Cards cards={lists[selectedList]} className={className} small />;
+  const { maxCards } = deckConfig;
+
+  if (!lists[selectedList].length)
+    return (
+      <div className={className}>
+        <span>Cards: 0/{maxCards}</span>
+        No card
+      </div>
+    );
+
+  const nbSelectedCards = lists[selectedList].reduce((sum, card) => sum + card.quantity, 0);
+
+  return (
+    <>
+      <span>
+        Cards: {nbSelectedCards}/{maxCards}
+      </span>
+      <Cards cards={lists[selectedList]} className={className} />
+    </>
+  );
 };

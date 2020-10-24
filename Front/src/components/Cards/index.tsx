@@ -2,7 +2,6 @@ import React from 'react';
 import { Card } from 'mtgsdk-ts';
 
 import CardCompo from '../Card';
-import SmallCardCompo from '../SmallCard';
 import styles from './style.module.scss';
 
 type AppProps = {
@@ -17,26 +16,21 @@ type AppProps = {
 export default ({
   cards,
   className,
-  small,
   canAddCard = (): boolean => false,
   addCard = (): null => null,
   canRemoveCard = (): boolean => false,
   removeCard = (): null => null,
 }: AppProps): JSX.Element => (
   <div className={styles.cards + ' ' + (className || '')}>
-    {cards.map((card, i) =>
-      small ? (
-        <SmallCardCompo card={card} key={i} />
-      ) : (
-        <CardCompo
-          card={card}
-          key={i}
-          canAddCard={canAddCard}
-          addCard={addCard}
-          canRemoveCard={canRemoveCard}
-          removeCard={removeCard}
-        />
-      ),
-    )}
+    {cards.map((card, i) => (
+      <CardCompo
+        card={card}
+        key={i}
+        canAddCard={canAddCard}
+        addCard={addCard}
+        canRemoveCard={canRemoveCard}
+        removeCard={removeCard}
+      />
+    ))}
   </div>
 );

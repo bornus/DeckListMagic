@@ -26,6 +26,6 @@ export class Test implements Deck {
   maxGround = 99;
   maxCardsPerName = 10;
   minCards = 99;
-  maxCards = 99;
+  maxCards = 150;
   // lists: EnhancedCard[][] = [[], []];
 }
