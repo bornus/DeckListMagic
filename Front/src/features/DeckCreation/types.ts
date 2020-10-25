@@ -6,24 +6,31 @@ export interface EnhancedCard extends Card {
   quantity: number;
 }
 
-export interface DeckConfig {
+export interface DeckFilter {
+  minLands: number | null;
+  maxLands: number | null;
+  maxCardsPerName: number | null;
+  minCards: number | null;
+  maxCards: number | null;
+  blackListedCards: string[] | null;
+}
+
+export interface DeckConfig extends DeckFilter {
+  name: string;
+}
+
+export interface DeckListConfig extends DeckFilter {
   lists: EnhancedCard[][];
   type: string;
   listCount: number;
-  listNames: string[];
+  listConfig: DeckConfig[];
 
   hasCommander: boolean;
-
   canAddCard: (Card: Card, listIndex: number) => boolean;
-  minGround: number;
-  maxGround: number;
-  maxCardsPerName: number;
-  minCards: number;
-  maxCards: number;
 }
 
 export interface DeckCreation {
-  deckConfig?: DeckConfig;
+  deckListConfig?: DeckListConfig;
   selectedList: number;
   loading?: boolean;
   error?: Error;

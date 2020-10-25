@@ -11,8 +11,8 @@ export default class Test extends BaseDeckType {
 
   // canAddCard = (card: Card, listIndex: number): boolean => super.canAddCard(card, listIndex);
 
-  minGround = 0;
-  maxGround = 100;
+  minLands = 0;
+  maxLands = 100;
   maxCardsPerName = 10;
   minCards = 100;
   maxCards = 100;

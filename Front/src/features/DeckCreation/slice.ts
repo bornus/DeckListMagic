@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Card } from 'mtgsdk-ts';
 
-import { DeckCreation, EnhancedCard, DeckConfig } from './types';
+import { DeckCreation, EnhancedCard, DeckListConfig } from './types';
 // import { Commander } from './deckTypes/commander';
 // import { Test } from './deckTypes/test';
 
 const initialState: DeckCreation = {
   selectedList: 0,
-  deckConfig: undefined,
+  deckListConfig: undefined,
   loading: false,
   error: undefined,
 };
@@ -16,34 +16,34 @@ const slice = createSlice({
   name: 'searchCards',
   initialState,
   reducers: {
-    newDeck(state: DeckCreation, action: PayloadAction<DeckConfig>): void {
+    newDeck(state: DeckCreation, action: PayloadAction<DeckListConfig>): void {
       state.loading = false;
-      state.deckConfig = { ...action.payload };
-      // state.deckConfig.lists = Array(action.payload.listCount).fill([]);
+      state.deckListConfig = { ...action.payload };
+      // state.deckListConfig.lists = Array(action.payload.listCount).fill([]);
       state.selectedList = 0;
     },
     addCard(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
-      if (state.deckConfig) {
-        if (state.deckConfig.canAddCard(action.payload, state.selectedList)) {
-          const index = state.deckConfig.lists[state.selectedList].map(({ id }) => id).indexOf(action.payload.id);
+      if (state.deckListConfig) {
+        if (state.deckListConfig.canAddCard(action.payload, state.selectedList)) {
+          const index = state.deckListConfig.lists[state.selectedList].map(({ id }) => id).indexOf(action.payload.id);
           if (index > -1) {
-            state.deckConfig.lists[state.selectedList][index].quantity += 1;
-          } else state.deckConfig.lists[state.selectedList].push({ ...action.payload, quantity: 1 });
+            state.deckListConfig.lists[state.selectedList][index].quantity += 1;
+          } else state.deckListConfig.lists[state.selectedList].push({ ...action.payload, quantity: 1 });
         }
       }
     },
     removeCard(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
-      if (state.deckConfig) {
-        const index = state.deckConfig.lists[state.selectedList].map(({ id }) => id).indexOf(action.payload.id);
+      if (state.deckListConfig) {
+        const index = state.deckListConfig.lists[state.selectedList].map(({ id }) => id).indexOf(action.payload.id);
         if (index > -1) {
-          if (state.deckConfig.lists[state.selectedList][index].quantity > 1)
-            state.deckConfig.lists[state.selectedList][index].quantity -= 1;
-          else state.deckConfig.lists[state.selectedList].splice(index, 1);
+          if (state.deckListConfig.lists[state.selectedList][index].quantity > 1)
+            state.deckListConfig.lists[state.selectedList][index].quantity -= 1;
+          else state.deckListConfig.lists[state.selectedList].splice(index, 1);
         }
       }
     },
     selectDeck(state: DeckCreation, action: PayloadAction<number>): void {
-      if (state.deckConfig) {
+      if (state.deckListConfig) {
         state.selectedList = action.payload;
       }
     },

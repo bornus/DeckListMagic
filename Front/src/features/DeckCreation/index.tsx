@@ -6,38 +6,38 @@ import { Card } from 'mtgsdk-ts';
 import { RootState } from 'authentificatedPages/rootReducer';
 import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
-import Deck from './Deck';
+import Deck from './DeckList';
 
 import { newDeck, addCard, removeCard } from './slice';
 import styles from './style.module.scss';
-import Commander from './deckTypes/commander';
+import Mordern from './deckTypes/mordern';
 import Test from './deckTypes/test';
 
 export default (): JSX.Element | null => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.deckCreation);
-  const { deckConfig, selectedList } = state;
+  const { deckListConfig, selectedList } = state;
 
-  const iniCommanderDeck = (): void => {
-    dispatch(newDeck(new Commander()));
+  const iniMordernDeck = (): void => {
+    dispatch(newDeck(new Mordern()));
   };
   const iniTestDeck = (): void => {
     dispatch(newDeck(new Test()));
   };
 
   let currentDeck: string[];
-  if (deckConfig) {
-    const { lists } = deckConfig;
+  if (deckListConfig) {
+    const { lists } = deckListConfig;
     currentDeck = lists[selectedList].map(({ name }) => name);
   }
 
   const canAddCard = (card: Card): boolean => {
-    if (!deckConfig) return false;
+    if (!deckListConfig) return false;
     return true;
     // return currentDeck.indexOf(card.id) == -1;
   };
   const canRemoveCard = (card: Card): boolean => {
-    if (!deckConfig) return false;
+    if (!deckListConfig) return false;
     return currentDeck.indexOf(card.name) >= 0;
   };
 
@@ -46,7 +46,7 @@ export default (): JSX.Element | null => {
       <div>Deck name</div>
       <div>
         Deck action (save, load, ...)
-        <Button variant="primary" className="mt-4" size="lg" onClick={iniCommanderDeck}>
+        <Button variant="primary" className="mt-4" size="lg" onClick={iniMordernDeck}>
           Init commander deck
         </Button>
         <Button variant="primary" className="mt-4" size="lg" onClick={iniTestDeck}>
@@ -55,7 +55,7 @@ export default (): JSX.Element | null => {
         La suite
       </div>
 
-      {deckConfig ? (
+      {deckListConfig ? (
         <div className={styles.container}>
           <div className={styles.searchContainer}>
             <SearchCards

@@ -11,11 +11,11 @@ type AppProps = {
 };
 export default ({ card }: AppProps): JSX.Element | null => {
   const state = useSelector((state: RootState) => state.deckCreation);
-  const { deckConfig } = state;
+  const { deckListConfig } = state;
 
-  if (!deckConfig) return null;
+  if (!deckListConfig) return null;
 
-  const { maxCardsPerName } = deckConfig;
+  const { maxCardsPerName } = deckListConfig;
 
   return (
     <div className={styles.card}>

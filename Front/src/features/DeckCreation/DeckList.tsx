@@ -1,36 +1,49 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import Spinner from 'react-bootstrap/Spinner';
+import { useSelector, useDispatch } from 'react-redux';
+import classNames from 'classnames';
 
 import { RootState } from 'authentificatedPages/rootReducer';
-import Cards from './InlineCards';
+import DeckList from './Deck';
 
-type AppProps = { className?: string | undefined };
-export default ({ className }: AppProps): JSX.Element => {
+import { selectDeck } from './slice';
+import styles from './style.module.scss';
+
+const DeckTabs = (): JSX.Element | null => {
+  const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.deckCreation);
-  const { loading, deckConfig, selectedList } = state;
+  const { deckListConfig, selectedList } = state;
+  if (!deckListConfig || deckListConfig.listCount === 0) return null;
 
-  if (loading) return <Spinner animation="border" className={className} />;
-  if (!deckConfig) return <div className={className}>No deck config</div>;
+  const { listConfig } = deckListConfig;
+  return (
+    <ul className="nav nav-pills nav-fill">
+      {listConfig.map((name, key) => (
+        <li className="nav-item" key={key}>
+          <div
+            role="link"
+            className={classNames('nav-link active', key === selectedList ? 'active' : '')}
+            onClick={(): void => {
+              dispatch(selectDeck(key));
+            }}
+          >
+            {name}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
-  const { lists, maxCards } = deckConfig;
+export default (): JSX.Element | null => {
+  const state = useSelector((state: RootState) => state.deckCreation);
+  const { deckListConfig } = state;
 
-  if (!lists[selectedList].length)
-    return (
-      <div className={className}>
-        <span>Cards: 0/{maxCards}</span>
-        No card
-      </div>
-    );
-
-  const nbSelectedCards = lists[selectedList].reduce((sum, card) => sum + card.quantity, 0);
+  if (!deckListConfig) return null;
 
   return (
-    <>
-      <span>
-        Cards: {nbSelectedCards}/{maxCards}
-      </span>
-      <Cards cards={lists[selectedList]} className={className} />
-    </>
+    <div>
+      <DeckTabs />
+      <DeckList className={classNames(styles.deckContainer, 'bd-sidebar')} />
+    </div>
   );
 };
