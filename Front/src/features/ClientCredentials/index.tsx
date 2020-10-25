@@ -14,7 +14,7 @@ function ClientCredentials(): JSX.Element {
 
   useEffect(() => {
     dispatch(listProjects());
-  });
+  }, []);
 
   let content = <div>Loading...</div>;
 
