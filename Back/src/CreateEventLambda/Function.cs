@@ -1,11 +1,13 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using DeckList.Commons;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -22,46 +24,45 @@ namespace CreateEventLambda
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
 
             Table deckListTable = Table.LoadTable(client, Constantes.TableName);
+            var batchWrite = deckListTable.CreateBatchWrite();
 
             Guid eventUid = Guid.NewGuid();
             Guid tournamentUid;
             string registerCode;
             bool find = false;
-
-            var evenement = new Document
-            {
-                [Constantes.DynamoCol.PK] = $"{Constantes.DynamoKey.EVENT}{eventUid}",
-                [Constantes.DynamoCol.EVENT_ID] = $"{eventUid}",
-                [Constantes.DynamoCol.EVENT_NAME] = magicEvent.EventName,
-                [Constantes.DynamoCol.TOURNAMENT_NAME] = magicEvent.TournamentName,
-                [Constantes.DynamoCol.DATE] = magicEvent.Date,
-                [Constantes.DynamoCol.FORMAT] = magicEvent.Format,
-            };
-
-            Expression expr = new Expression
-            {
-                ExpressionStatement = "attribute_not_exists(:RC)",
-                ExpressionAttributeValues = {[":RC"] = Constantes.DynamoCol.REGISTER_CODE}
-            };
-
-            UpdateItemOperationConfig config = new UpdateItemOperationConfig
-            {
-                ConditionalExpression = expr,
-                ReturnValues = ReturnValues.AllNewAttributes
-            };
-
             do
             {
                 tournamentUid = Guid.NewGuid();
                 registerCode = tournamentUid.ToString().Substring(0, 8);
-
-                evenement[Constantes.DynamoCol.SK] = $"{Constantes.DynamoKey.EVENT}{eventUid}#{Constantes.DynamoKey.TOURNAMENT}{tournamentUid}";
-                evenement[Constantes.DynamoCol.TOURNAMENT_ID] = $"{tournamentUid}";
-                evenement[Constantes.DynamoCol.REGISTER_CODE] = registerCode;
-                var tournamentCreation = deckListTable.UpdateItemAsync(evenement, config);
-                tournamentCreation.Wait();
-                find = tournamentCreation.IsCompletedSuccessfully;
+                QueryRequest req = new QueryRequest
+                {
+                    TableName = Constantes.TableName,
+                    IndexName = Constantes.TableIndex.REGISTER_CODE,
+                    KeyConditionExpression = $"{Constantes.DynamoCol.REGISTER_CODE} = :v_registerCode",
+                    ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
+                        {":v_registerCode", new AttributeValue {
+                            S = registerCode
+                        }}
+                        }
+                };
+                Task<QueryResponse> search = client.QueryAsync(req);
+                search.Wait();
+                find = search.Result.Count != 0;
             } while (find);
+
+
+            var evenement = new Document
+            {
+                [Constantes.DynamoCol.PK] = $"{Constantes.DynamoKey.EVENT}{eventUid}",
+                [Constantes.DynamoCol.SK] = $"{Constantes.DynamoKey.EVENT}{eventUid}#{Constantes.DynamoKey.TOURNAMENT}{tournamentUid}",
+                [Constantes.DynamoCol.EVENT_ID] = $"{eventUid}",
+                [Constantes.DynamoCol.TOURNAMENT_ID] = $"{tournamentUid}",
+                [Constantes.DynamoCol.EVENT_NAME] = magicEvent.EventName,
+                [Constantes.DynamoCol.TOURNAMENT_NAME] = magicEvent.TournamentName,
+                [Constantes.DynamoCol.DATE] = magicEvent.Date,
+                [Constantes.DynamoCol.FORMAT] = magicEvent.Format,
+                [Constantes.DynamoCol.REGISTER_CODE] = registerCode,
+            };
 
             magicEvent.EventId = eventUid.ToString();
             magicEvent.TournamentId = tournamentUid.ToString();
@@ -75,12 +76,15 @@ namespace CreateEventLambda
                 [Constantes.DynamoCol.USER_ID] = $"{userUid}"
             };
 
-            var eventToCreation = deckListTable.UpdateItemAsync(evenementTo);
-            eventToCreation.Wait();
+            batchWrite.AddDocumentToPut(evenement);
+            batchWrite.AddDocumentToPut(evenementTo);
+
+            var batch = batchWrite.ExecuteAsync();
+            batch.Wait();
 
             context.Logger.LogLine("Stream processing complete.");
 
-            var headersDic = new Dictionary<string, string> {{"Content-type", "application/json"}};
+            var headersDic = new Dictionary<string, string> { { "Content-type", "application/json" } };
 
             return new APIGatewayProxyResponse()
             {
