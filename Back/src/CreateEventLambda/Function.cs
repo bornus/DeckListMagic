@@ -16,7 +16,7 @@ namespace CreateEventLambda
 {
     public class Function
     {
-        public APIGatewayProxyResponse FunctionHandler(MagicEvent magicEvent, ILambdaContext context)
+        public MagicEvent FunctionHandler(MagicEvent magicEvent, ILambdaContext context)
         {
             context.Logger.LogLine($"Beginning to register {magicEvent.EventName} Event.");
 
@@ -86,13 +86,14 @@ namespace CreateEventLambda
 
             var headersDic = new Dictionary<string, string> { { "Content-type", "application/json" } };
 
-            return new APIGatewayProxyResponse()
-            {
-                StatusCode = 201,
-                Headers = headersDic,
-                // return the image in Base64 encoding
-                Body = JsonConvert.SerializeObject(magicEvent) //Convert.ToBase64String(reader.ReadBytes(Convert.ToInt32(responseStream.Length))),
-            };
+            return magicEvent;
+            //return new APIGatewayProxyResponse()
+            //{
+            //    StatusCode = 201,
+            //    Headers = headersDic,
+            //    // return the image in Base64 encoding
+            //    Body = JsonConvert.SerializeObject(magicEvent) //Convert.ToBase64String(reader.ReadBytes(Convert.ToInt32(responseStream.Length))),
+            //};
         }
     }
 }

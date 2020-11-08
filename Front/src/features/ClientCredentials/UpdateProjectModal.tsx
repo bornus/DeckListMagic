@@ -28,7 +28,7 @@ export default function UpdateProjectModal(props: Props): JSX.Element {
     handleSubmit,
     errors,
     getValues,
-    formState: { touched, isValid },
+    formState: { touched },
   } = useForm<Form>({
     validationSchema: schema,
     mode: 'onChange',

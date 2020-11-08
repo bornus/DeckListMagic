@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { RootState } from 'authentificatedPages/rootReducer';
 import Header from 'components/Header';
-import Navigation from 'components/Navigation';
 import { currentAuthenticatedUser } from 'features/auth/authSlice';
 import Home from 'features/dashboard/Home';
 import ClientCredentials from 'features/ClientCredentials';
@@ -70,7 +69,6 @@ export default function App(): JSX.Element {
       <div className="app">
         <Router>
           <Header />
-          <Navigation />
           <div className="main">
             <Switch>
               <Route path="/client-credentials">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -26,7 +26,9 @@ export default (): JSX.Element => {
             Already have an account? <Link to="/signIn">Sign in</Link>
           </p>
           <p style={{ marginTop: 40 }} className="text-center">
-            <a onClick={onGoToStep2}>Already have a code?</a>
+            <div role="link" onClick={onGoToStep2}>
+              Already have a code?
+            </div>
           </p>
         </>
       );

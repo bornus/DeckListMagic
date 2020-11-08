@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -31,7 +31,7 @@ export default function NewProjectModal(props: Props): JSX.Element {
     handleSubmit,
     errors,
     getValues,
-    formState: { touched, isValid },
+    formState: { touched },
   } = useForm<Form>({
     validationSchema: schema,
     mode: 'onChange',
@@ -45,7 +45,7 @@ export default function NewProjectModal(props: Props): JSX.Element {
   };
 
   const dispatch = useDispatch();
-  const { loading, error, credentials } = useSelector((state: RootState) => state.clientCredentials.addModal);
+  const { loading, credentials } = useSelector((state: RootState) => state.clientCredentials.addModal);
 
   const onSubmit = async ({ applicationName }: Form) => {
     dispatch(addProject(applicationName));

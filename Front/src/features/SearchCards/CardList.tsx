@@ -1,23 +1,36 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
+import { Card } from 'mtgsdk-ts';
 
 import { RootState } from 'authentificatedPages/rootReducer';
-import Card from './Card';
+import Cards from 'components/Cards';
 
-import styles from './card-list.module.scss';
+type AppProps = {
+  canAddCard?: (card: Card) => boolean;
+  addCard?: (card: Card) => void;
+  canRemoveCard?: (card: Card) => boolean;
+  removeCard?: (card: Card) => void;
+};
 
-export default (): JSX.Element => {
+export default ({
+  canAddCard = (): boolean => false,
+  addCard = (): null => null,
+  canRemoveCard = (): boolean => false,
+  removeCard = (): null => null,
+}: AppProps): JSX.Element => {
   const searchState = useSelector((state: RootState) => state.searchCards);
   const { loading, cardsFound } = searchState;
 
   if (loading) return <Spinner animation="border" />;
 
   return (
-    <div className={styles.cards}>
-      {cardsFound.map((card, i) => (
-        <Card card={card} key={i} />
-      ))}
-    </div>
+    <Cards
+      cards={cardsFound}
+      canAddCard={canAddCard}
+      addCard={addCard}
+      canRemoveCard={canRemoveCard}
+      removeCard={removeCard}
+    />
   );
 };

@@ -18,7 +18,7 @@ const testApi = async ({ body, path }: TestApiType): Promise<void> => {
     };
 
     const { statusCode, ...rest } = await API.post(apiName, path, data);
-    if (statusCode === 200) {
+    if (statusCode === 200 || statusCode === 201) {
       console.log('Success', rest);
     } else {
       console.error('Error', rest);

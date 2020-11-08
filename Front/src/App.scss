@@ -199,3 +199,9 @@ form p {
   padding: 0;
   margin-top: calc(1rem + 16px);
 }
+
+div[role="link"], span[role="link"] {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

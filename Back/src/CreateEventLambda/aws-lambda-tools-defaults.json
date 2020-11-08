@@ -6,7 +6,7 @@
         "dotnet lambda help",
         "All the command line options for the Lambda command can be specified in this file."
     ],
-    "profile"     : "default",
+    "profile"     : "elfenthlis",
     "region"      : "eu-west-1",
     "configuration" : "Release",
     "framework"     : "netcoreapp3.1",
@@ -17,5 +17,6 @@
     "function-name"        : "MtgDeckListCreateEvent",
     "function-role"        : "arn:aws:iam::722855790333:role/lambda_exec_MtgDeckListCreateEvent",
     "tracing-mode"         : "PassThrough",
-    "environment-variables" : ""
+    "environment-variables" : "",
+    "function-description"  : ""
 }
