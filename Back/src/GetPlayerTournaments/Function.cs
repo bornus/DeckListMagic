@@ -21,7 +21,7 @@ namespace GetPlayerTournaments
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public APIGatewayProxyResponse FunctionHandler(ILambdaContext context)
+        public List<Tournament> FunctionHandler(ILambdaContext context)
         {
             var userUid = context.Identity.IdentityId;
             context.Logger.LogLine($"Beginning to search event for player {userUid} Event.");
@@ -83,13 +83,14 @@ namespace GetPlayerTournaments
 
             var headersDic = new Dictionary<string, string> { { "Content-type", "application/json" } };
 
-            return new APIGatewayProxyResponse()
-            {
-                StatusCode = 200,
-                Headers = headersDic,
-                // return the image in Base64 encoding
-                Body = JsonConvert.SerializeObject(tournaments)
-            };
+            return tournaments;
+            //return new APIGatewayProxyResponse()
+            //{
+            //    StatusCode = 200,
+            //    Headers = headersDic,
+            //    // return the image in Base64 encoding
+            //    Body = JsonConvert.SerializeObject(tournaments)
+            //};
         }
     }
 }

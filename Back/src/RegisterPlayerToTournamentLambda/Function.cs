@@ -24,7 +24,7 @@ namespace RegisterPlayerToTournamentLambda
         /// <param name="register">Les infos d'inscriptions au tournoi</param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public APIGatewayProxyResponse FunctionHandler(RegisterEvent register, ILambdaContext context)
+        public TournamentRegistration FunctionHandler(RegisterEvent register, ILambdaContext context)
         {
             var userUid = context.Identity.IdentityId;
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
@@ -75,13 +75,14 @@ namespace RegisterPlayerToTournamentLambda
 
             var headersDic = new Dictionary<string, string> { { "Content-type", "application/json" } };
 
-            return new APIGatewayProxyResponse()
-            {
-                StatusCode = 201,
-                Headers = headersDic,
-                // return the image in Base64 encoding
-                Body = JsonConvert.SerializeObject(tournamentRegistration) //Convert.ToBase64String(reader.ReadBytes(Convert.ToInt32(responseStream.Length))),
-            };
+            return tournamentRegistration;
+            //return new APIGatewayProxyResponse()
+            //{
+            //    StatusCode = 201,
+            //    Headers = headersDic,
+            //    // return the image in Base64 encoding
+            //    Body = JsonConvert.SerializeObject(tournamentRegistration) //Convert.ToBase64String(reader.ReadBytes(Convert.ToInt32(responseStream.Length))),
+            //};
         }
     }
 }
