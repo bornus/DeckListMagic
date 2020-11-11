@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetPlayerTournaments", "Get
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RegisterPlayerToTournamentLambda", "RegisterPlayerToTournamentLambda\RegisterPlayerToTournamentLambda.csproj", "{E455D805-EF10-4A6C-8D96-498F1B78951E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeckList.SaveDeckList", "DeckList.SaveDeckList\DeckList.SaveDeckList.csproj", "{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{E455D805-EF10-4A6C-8D96-498F1B78951E}.Release|x64.Build.0 = Release|Any CPU
 		{E455D805-EF10-4A6C-8D96-498F1B78951E}.Release|x86.ActiveCfg = Release|Any CPU
 		{E455D805-EF10-4A6C-8D96-498F1B78951E}.Release|x86.Build.0 = Release|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Debug|x64.Build.0 = Debug|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Debug|x86.Build.0 = Debug|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Release|x64.ActiveCfg = Release|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Release|x64.Build.0 = Release|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Release|x86.ActiveCfg = Release|Any CPU
+		{55669FE9-E08E-4FF0-BDBE-4375DEE67B71}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

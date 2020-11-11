@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DeckList.Commons
+﻿namespace DeckList.Commons
 {
     public class Tournament
     {
