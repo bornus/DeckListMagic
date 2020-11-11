@@ -26,6 +26,7 @@ export interface DeckListConfig extends DeckFilter {
   listConfig: DeckConfig[];
 
   hasCommander: boolean;
+  commander: Card | null;
   canAddCard: (Card: Card, listIndex: number) => boolean;
 }
 

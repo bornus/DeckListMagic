@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Card } from 'mtgsdk-ts';
+import { useDebounce } from 'react-use';
 
 import TextField from 'components/TextField';
 // import Spinner from 'react-bootstrap/Spinner';
@@ -23,10 +24,18 @@ export default ({
   removeCard = (): null => null,
 }: AppProps): JSX.Element => {
   const dispatch = useDispatch();
+  const [val, setVal] = React.useState('');
+  const [,] = useDebounce(
+    () => {
+      dispatch(searchCards(val));
+    },
+    800,
+    [val]
+  );
 
   const onUpdate = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
-    dispatch(searchCards(e.target.value));
+    setVal(e.target.value);
   };
 
   return (
@@ -36,9 +45,9 @@ export default ({
         className={styles['searchCards__input']}
         name="cardText"
         type="text"
-        placeholder="Force of will"
+        placeholder="Nom de la carte"
         errors={{}}
-        onBlur={onUpdate}
+        onChange={onUpdate}
       />
       <CardList canAddCard={canAddCard} addCard={addCard} canRemoveCard={canRemoveCard} removeCard={removeCard} />
     </>

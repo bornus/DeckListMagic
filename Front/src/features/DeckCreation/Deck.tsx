@@ -18,7 +18,7 @@ export default ({ className }: AppProps): JSX.Element => {
   if (!lists[selectedList].length)
     return (
       <div className={className}>
-        <span>Cards: 0/{maxCards}</span>
+        <span>Cards: 0/{maxCards || '∞'}</span>
         No card
       </div>
     );
@@ -28,7 +28,7 @@ export default ({ className }: AppProps): JSX.Element => {
   return (
     <>
       <span>
-        Cards: {nbSelectedCards}/{maxCards}
+        Cards: {nbSelectedCards}/{maxCards || '∞'}
       </span>
       <Cards cards={lists[selectedList]} className={className} />
     </>

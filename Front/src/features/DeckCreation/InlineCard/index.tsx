@@ -15,7 +15,13 @@ export default ({ card }: AppProps): JSX.Element | null => {
 
   if (!deckListConfig) return null;
 
-  const { maxCardsPerName } = deckListConfig;
+  const { maxCardsPerName, maxLands } = deckListConfig;
+  const { types, supertypes } = card;
+
+  let quantity = `(${card.quantity}/${maxCardsPerName})`;
+  if (types.includes('Land') && supertypes.includes('Basic')) {
+    quantity = `(${card.quantity})`;
+  }
 
   return (
     <div className={styles.card}>
@@ -26,7 +32,7 @@ export default ({ card }: AppProps): JSX.Element | null => {
           src={card.imageUrl || 'https://via.placeholder.com/50x70.png?text=Image non trouvée'}
         />
       </span>
-      {card.name} ({card.quantity}/{maxCardsPerName})
+      {card.name} {quantity}
     </div>
   );
 };

@@ -16,7 +16,7 @@ export default class Modern extends BaseDeckType {
   lists: EnhancedCard[][] = Array(this.listCount).fill([]);
   listConfig: DeckConfig[] = [];
 
-  hasCommander = true;
+  hasCommander = false;
   commander = null;
 
   blackListedCards: string[] = [];
@@ -27,20 +27,20 @@ export default class Modern extends BaseDeckType {
   minCards = 60;
   maxCards = null;
 
-  canAddCard(card: Card, listIndex: number): boolean {
-    // Have to add first the commander!
-    if (!this.commander) return false;
-    return super.canAddCard(card, listIndex);
+  // canAddCard(card: Card, listIndex: number): boolean {
+  //   // Have to add first the commander!
+  //   // if (!this.commander) return false;
+  //   return super.canAddCard(card, listIndex);
 
-    // == LANDS = unlimited
-    // supertypes	[ "Basic" ]
-    // types	[ "Land" ]
+  //   // == LANDS = unlimited
+  //   // supertypes	[ "Basic" ]
+  //   // types	[ "Land" ]
 
-    // No need blacklisted
-    // legalities	[ { format: "Modern", legality: "Legal" }]
+  //   // No need blacklisted
+  //   // legalities	[ { format: "Modern", legality: "Legal" }]
 
-    return true;
-  }
+  //   return true;
+  // }
 
   // Side = 15 max
 }
