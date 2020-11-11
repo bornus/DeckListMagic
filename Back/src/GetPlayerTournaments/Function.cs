@@ -84,13 +84,6 @@ namespace GetPlayerTournaments
             var headersDic = new Dictionary<string, string> { { "Content-type", "application/json" } };
 
             return tournaments;
-            //return new APIGatewayProxyResponse()
-            //{
-            //    StatusCode = 200,
-            //    Headers = headersDic,
-            //    // return the image in Base64 encoding
-            //    Body = JsonConvert.SerializeObject(tournaments)
-            //};
         }
     }
 }
