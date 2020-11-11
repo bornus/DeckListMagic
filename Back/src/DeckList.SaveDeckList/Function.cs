@@ -8,11 +8,11 @@ using System;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace CreateEventLambda
+namespace DeckList.SaveDeckList
 {
     public class Function
     {
-        public DeckList FunctionHandler(DeckList deckList, ILambdaContext context)
+        public Deck FunctionHandler(Deck deckList, ILambdaContext context)
         {
             context.Logger.LogLine($"Beginning to register {deckList.Name} DeckList.");
 

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace CreateEventLambda
+namespace DeckList.Commons
 {
-    public class DeckList
+    public class Deck
     {
         public string Id { get; set; }
         public string Name { get; set; }

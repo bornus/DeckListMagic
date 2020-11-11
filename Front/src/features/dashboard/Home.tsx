@@ -4,9 +4,10 @@ import { API, Auth } from 'aws-amplify';
 export type TestApiType = {
   body: object;
   path: string;
+  verb?: string;
 };
 
-const testApi = async ({ body, path }: TestApiType): Promise<string> => {
+const testApi = async ({ body, path, verb = 'POST' }: TestApiType): Promise<string> => {
   try {
     const apiName = 'api';
     const Authorization = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`;
@@ -17,12 +18,10 @@ const testApi = async ({ body, path }: TestApiType): Promise<string> => {
       },
     };
 
-    const { statusCode, ...rest } = await API.post(apiName, path, data);
-    if (statusCode === 200 || statusCode === 201) {
-      console.log('Success', rest);
-    } else {
-      console.error('Error', rest);
-    }
+    const rest =
+      verb === 'PUT' ? await API.put(apiName, path, data) : await API.post(apiName, path, data);
+
+    console.log('Success', rest);
     return JSON.stringify(rest);
   } catch (e) {
     console.error(e);
@@ -58,6 +57,26 @@ export default (): JSX.Element => {
         }
       >
         Test api - Create event
+      </button>
+      Test save DeckList
+      <button
+        onClick={async (): Promise<void> =>
+          setResult(
+            await testApi({
+              path: '/deck',
+              // verb: 'POST',
+              body: {
+                Name: "Toto",
+                Format: "Modern",
+                Author: "Moi",
+                MainDeck: [{ name: "firstCard", id: "bolt", quantity: 1 }],
+                SideDeck: [{ name: "SideCard", id: "boltSide", quantity: 100 }],
+              },
+            }),
+          )
+        }
+      >
+        Test api - Create Deck
       </button>
     </div>
   );
