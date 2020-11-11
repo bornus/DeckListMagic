@@ -18,7 +18,11 @@ const slice = createSlice({
   reducers: {
     newDeck(state: DeckCreation, action: PayloadAction<DeckListConfig>): void {
       state.loading = false;
-      state.deckListConfig = { ...action.payload };
+      state.deckListConfig = {
+        ...action.payload, 
+        canAddCard: action.payload.canAddCard,
+      };
+      console.log('deckListConfig', action.payload, state.deckListConfig)
       // state.deckListConfig.lists = Array(action.payload.listCount).fill([]);
       state.selectedList = 0;
     },
@@ -30,6 +34,16 @@ const slice = createSlice({
             state.deckListConfig.lists[state.selectedList][index].quantity += 1;
           } else state.deckListConfig.lists[state.selectedList].push({ ...action.payload, quantity: 1 });
         }
+      }
+    },
+    setCommander(state: DeckCreation, action: PayloadAction<Card>): void {
+      if (state.deckListConfig?.hasCommander) {
+        state.deckListConfig.commander = action.payload;
+      }
+    },
+    unsetCommander(state: DeckCreation): void {
+      if (state.deckListConfig?.hasCommander) {
+        state.deckListConfig.commander = null;
       }
     },
     removeCard(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
@@ -52,4 +66,4 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-export const { newDeck, addCard, removeCard, selectDeck } = slice.actions;
+export const { newDeck, addCard, setCommander, unsetCommander, removeCard, selectDeck } = slice.actions;

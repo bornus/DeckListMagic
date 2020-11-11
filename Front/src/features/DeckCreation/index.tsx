@@ -8,7 +8,7 @@ import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
 import Deck from './DeckList';
 
-import { newDeck, addCard, removeCard } from './slice';
+import { newDeck, addCard, removeCard, setCommander } from './slice';
 import styles from './style.module.scss';
 import Mordern from './deckTypes/mordern';
 import Test from './deckTypes/test';
@@ -31,6 +31,17 @@ export default (): JSX.Element | null => {
     currentDeck = lists[selectedList].map(({ name }) => name);
   }
 
+  const onAddCard = (card: Card): void => {
+    if (!deckListConfig) return ;
+
+    if(deckListConfig.hasCommander && !deckListConfig.commander) {
+      // TODO: Add a check if compatible Commander
+      dispatch(setCommander(card));
+    }
+
+    dispatch(addCard(card));
+  };
+
   const canAddCard = (card: Card): boolean => {
     if (!deckListConfig) return false;
     return true;
@@ -49,10 +60,10 @@ export default (): JSX.Element | null => {
         <Button variant="primary" className="mt-4" size="lg" onClick={iniMordernDeck}>
           Init commander deck
         </Button>
-        <Button variant="primary" className="mt-4" size="lg" onClick={iniTestDeck}>
+        {/* <Button variant="primary" className="mt-4" size="lg" onClick={iniTestDeck}>
           Init test deck
-        </Button>
-        La suite
+        </Button> */}
+        {/* La suite */}
       </div>
 
       {deckListConfig ? (
@@ -60,9 +71,7 @@ export default (): JSX.Element | null => {
           <div className={styles.searchContainer}>
             <SearchCards
               canAddCard={canAddCard}
-              addCard={(card: Card): void => {
-                dispatch(addCard(card));
-              }}
+              addCard={onAddCard}
               canRemoveCard={canRemoveCard}
               removeCard={(card: Card): void => {
                 dispatch(removeCard(card));
