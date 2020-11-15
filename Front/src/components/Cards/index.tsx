@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card } from 'mtgsdk-ts';
+import classnames from 'classnames';
 
 import CardCompo from '../Card';
 import styles from './style.module.scss';
@@ -21,7 +22,7 @@ export default ({
   canRemoveCard = (): boolean => false,
   removeCard = (): null => null,
 }: AppProps): JSX.Element => (
-  <div className={styles.cards + ' ' + (className || '')}>
+  <div className={classnames(styles.cards, className)}>
     {cards.map((card, i) => (
       <CardCompo
         card={card}

@@ -6,7 +6,7 @@ import { Card } from 'mtgsdk-ts';
 import { RootState } from 'authentificatedPages/rootReducer';
 import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
-import Deck from './DeckList';
+import DeckList from './DeckList';
 
 import { newDeck, addCard, removeCard, setCommander } from './slice';
 import styles from './style.module.scss';
@@ -32,9 +32,9 @@ export default (): JSX.Element | null => {
   }
 
   const onAddCard = (card: Card): void => {
-    if (!deckListConfig) return ;
+    if (!deckListConfig) return;
 
-    if(deckListConfig.hasCommander && !deckListConfig.commander) {
+    if (deckListConfig.hasCommander && !deckListConfig.commander) {
       // TODO: Add a check if compatible Commander
       dispatch(setCommander(card));
     }
@@ -67,18 +67,19 @@ export default (): JSX.Element | null => {
       </div>
 
       {deckListConfig ? (
-        <div className={styles.container}>
-          <div className={styles.searchContainer}>
-            <SearchCards
-              canAddCard={canAddCard}
-              addCard={onAddCard}
-              canRemoveCard={canRemoveCard}
-              removeCard={(card: Card): void => {
-                dispatch(removeCard(card));
-              }}
-            />
-          </div>
-          <Deck />
+        // <div className={styles.container}>
+        // <div className={styles.searchContainer}>
+        <div className="row">
+          <SearchCards
+            className="col-9"
+            canAddCard={canAddCard}
+            addCard={onAddCard}
+            canRemoveCard={canRemoveCard}
+            removeCard={(card: Card): void => {
+              dispatch(removeCard(card));
+            }}
+          />
+          <DeckList className="col-3" />
         </div>
       ) : null}
     </div>

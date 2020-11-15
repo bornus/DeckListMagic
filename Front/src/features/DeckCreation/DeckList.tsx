@@ -34,14 +34,17 @@ const DeckTabs = (): JSX.Element | null => {
   );
 };
 
-export default (): JSX.Element | null => {
+type AppProps = {
+  className?: string;
+};
+export default ({ className }: AppProps): JSX.Element | null => {
   const state = useSelector((state: RootState) => state.deckCreation);
   const { deckListConfig } = state;
 
   if (!deckListConfig) return null;
 
   return (
-    <div>
+    <div className={classNames(className, "bg-light")}>
       <DeckTabs />
       <DeckList className={classNames(styles.deckContainer, 'bd-sidebar')} />
     </div>

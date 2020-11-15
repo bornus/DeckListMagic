@@ -32,7 +32,9 @@ export default ({ card }: AppProps): JSX.Element | null => {
           src={card.imageUrl || 'https://via.placeholder.com/50x70.png?text=Image non trouvée'}
         />
       </span>
-      {card.name} {quantity}
+      <span style={{float:'right'}}>
+        {card.name} {quantity}
+      </span>
     </div>
   );
 };

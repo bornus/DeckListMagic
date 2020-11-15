@@ -11,6 +11,7 @@ import CardList from './CardList';
 import styles from './style.module.scss';
 
 type AppProps = {
+  className?: string;
   canAddCard?: (card: Card) => boolean;
   addCard?: (card: Card) => void;
   canRemoveCard?: (card: Card) => boolean;
@@ -18,6 +19,7 @@ type AppProps = {
 };
 
 export default ({
+  className,
   canAddCard = (): boolean => false,
   addCard = (): null => null,
   canRemoveCard = (): boolean => false,
@@ -39,7 +41,7 @@ export default ({
   };
 
   return (
-    <>
+    <div className={className}>
       Rechercher une carte
       <TextField
         className={styles['searchCards__input']}
@@ -50,6 +52,6 @@ export default ({
         onChange={onUpdate}
       />
       <CardList canAddCard={canAddCard} addCard={addCard} canRemoveCard={canRemoveCard} removeCard={removeCard} />
-    </>
+    </div>
   );
 };

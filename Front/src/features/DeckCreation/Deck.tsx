@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
+import classnames from 'classnames';
 
 import { RootState } from 'authentificatedPages/rootReducer';
 import Cards from './InlineCards';
@@ -17,8 +18,8 @@ export default ({ className }: AppProps): JSX.Element => {
 
   if (!lists[selectedList].length)
     return (
-      <div className={className}>
-        <span>Cards: 0/{maxCards || '∞'}</span>
+      <div className={classnames(className, 'text-right')}>
+        <div>Cards: 0/{maxCards || '∞'}</div>
         No card
       </div>
     );
@@ -26,11 +27,11 @@ export default ({ className }: AppProps): JSX.Element => {
   const nbSelectedCards = lists[selectedList].reduce((sum, card) => sum + card.quantity, 0);
 
   return (
-    <>
-      <span>
+    <div className={classnames(className, 'text-right')}>
+      <div>
         Cards: {nbSelectedCards}/{maxCards || '∞'}
-      </span>
-      <Cards cards={lists[selectedList]} className={className} />
-    </>
+      </div>
+      <Cards cards={lists[selectedList]} />
+    </div>
   );
 };

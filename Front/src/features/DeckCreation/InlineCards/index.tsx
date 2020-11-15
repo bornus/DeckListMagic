@@ -1,4 +1,6 @@
 import React from 'react';
+import classnames from 'classnames';
+
 import { EnhancedCard } from '../types';
 
 import InlineCard from '../InlineCard';
@@ -9,7 +11,7 @@ type AppProps = {
   className?: string | undefined;
 };
 export default ({ cards, className }: AppProps): JSX.Element => (
-  <div className={styles.cards + ' ' + (className || '')}>
+  <div className={classnames(styles.cards, 'text-left', className)}>
     {cards.map((card, i) => (
       <InlineCard card={card} key={i} />
     ))}
