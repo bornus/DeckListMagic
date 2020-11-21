@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Card } from 'mtgsdk-ts';
+import { API, Auth } from 'aws-amplify';
 
 import { DeckCreation, EnhancedCard, DeckListConfig } from './types';
+import { putAction, postAction, getAction } from 'utils/apiUtils';
 // import { Commander } from './deckTypes/commander';
 // import { Test } from './deckTypes/test';
 
@@ -60,6 +62,15 @@ const slice = createSlice({
       if (state.deckListConfig) {
         state.selectedList = action.payload;
       }
+    },
+    saveDeckList(state: DeckCreation): void {
+      if (state.deckListConfig) {
+        // Save the deck list config
+      }
+    },
+    loadDeckList(state: DeckCreation, action: PayloadAction<string>): void {
+      // Load the deck list config from action.payload as id
+      // Then load each card asynchronously
     },
   },
 });
