@@ -153,6 +153,7 @@ export const loadDeckListConfig = (id: string): AppThunk => async (
       }))
       const ids:String[] = Array.from(idsSet);
 
+      // TODO: Securise if too many calls
       ids.map(async id => {
         const {
           data: { card:updatedCard },

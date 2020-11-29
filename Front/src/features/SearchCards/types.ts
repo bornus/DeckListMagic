@@ -34,6 +34,7 @@ export interface SearchCards {
   cardsFound: Card[];
   loading?: boolean;
   error?: Error;
+  requestId: number;
 }
 
 export interface Error {
