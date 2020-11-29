@@ -72,15 +72,17 @@ export const searchCards = (name: string): AppThunk => async (
             cards.filter(({ name: refName }, pos, arr) => arr.map(({ name }) => name).indexOf(refName) === pos),
           ),
         );
-      }
 
-      const links = decodeLinksFromHeader(headers.link);
-      if(links.next) {
-        nextRequest = links.next;
+        const links = decodeLinksFromHeader(headers.link);
+        if(links.next) {
+          nextRequest = links.next;
+        } else {
+          hasNext = false;
+        }
       } else {
         hasNext = false;
       }
-    } while (nextRequest && getState().searchCards.cardsFound.length < 100);
+    } while (hasNext && getState().searchCards.cardsFound.length < 100);
 
   } catch (e) {
     dispatch(authSlice.actions.searchCardsError(e));

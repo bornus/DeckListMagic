@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { Card } from 'mtgsdk-ts';
 import { useDebounce } from 'react-use';
+import * as yup from 'yup';
 
 import TextField from 'components/TextField';
 // import Spinner from 'react-bootstrap/Spinner';
@@ -18,6 +20,14 @@ type AppProps = {
   removeCard?: (card: Card) => void;
 };
 
+const schema = yup.object().shape({
+  cardText: yup.string().min(3, '3 caractères minimum'),
+});
+
+interface Form {
+  cardText: string;
+}
+
 export default ({
   className,
   canAddCard = (): boolean => false,
@@ -29,15 +39,32 @@ export default ({
   const [val, setVal] = React.useState('');
   const [,] = useDebounce(
     () => {
-      dispatch(searchCards(val));
+      if(val.length >= 3) {
+        dispatch(searchCards(val));
+      }
     },
     800,
     [val]
   );
 
+  const {
+    register,
+    errors,
+    formState: { touched, isValid },
+  } = useForm<Form>({
+    validationSchema: schema,
+    mode: 'onChange',
+  });
+
   const onUpdate = (e: React.ChangeEvent<HTMLInputElement>): void => {
     e.preventDefault();
     setVal(e.target.value);
+  };
+
+  const TextFieldProps = {
+    touched,
+    errors,
+    inputRef: register,
   };
 
   return (
@@ -48,9 +75,10 @@ export default ({
         name="cardText"
         type="text"
         placeholder="Nom de la carte"
-        errors={{}}
         onChange={onUpdate}
+        {...TextFieldProps}
       />
+
       <CardList canAddCard={canAddCard} addCard={addCard} canRemoveCard={canRemoveCard} removeCard={removeCard} />
     </div>
   );
