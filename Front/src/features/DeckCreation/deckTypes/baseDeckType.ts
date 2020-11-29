@@ -1,7 +1,7 @@
 // https://magic.wizards.com/fr/content/commander-format
 
 import { Card } from 'mtgsdk-ts';
-import { EnhancedCard, DeckListConfig, DeckConfig } from '../types';
+import { EnhancedCard, DeckListConfig, DeckConfig, MinifyDeckListConfig } from '../types';
 
 export default abstract class BaseDeckType implements DeckListConfig {
   abstract lists: EnhancedCard[][];
@@ -107,5 +107,17 @@ export default abstract class BaseDeckType implements DeckListConfig {
     }
 
     return true;
+  }
+
+  static minifyDeck(deck:DeckListConfig): MinifyDeckListConfig {
+    // Cast DeckListConfig to MinifyDeckListConfig
+    const minifiedDeck:MinifyDeckListConfig = Object.assign({}, deck);
+
+    // TODO: Maybe useless
+    minifiedDeck.lists.map((list, i) => {
+      minifiedDeck.lists[i] = list.map(({ id, name, quantity }) => ({ id, name, quantity }))
+    });
+
+    return minifiedDeck;
   }
 }

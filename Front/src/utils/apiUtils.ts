@@ -5,6 +5,10 @@ type apiCall = {
   path: string;
 };
 
+type getCall = {
+  path: string;
+};
+
 const apiName = 'api';
 
 export const getAuthorization = async (): Promise<string> =>
@@ -26,7 +30,7 @@ export const postAction = async ({ body, path }: apiCall): Promise<any> =>
     },
   });
 
-export const getAction = async ({ path }: apiCall): Promise<any> =>
+export const getAction = async ({ path }: getCall): Promise<any> =>
   await API.get(apiName, path, {
     headers: {
       Authorization: getAuthorization,
