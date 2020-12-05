@@ -9,15 +9,29 @@ import { CardInfo, DeckConfig as BackDeckConfig } from 'models/backTypes';
 import { decodeLinksFromHeader } from 'utils/apiUtils';
 import { RootState } from 'authentificatedPages/rootReducer';
 
+const modalInitialState = {
+  loading: false,
+  error: undefined,
+  opened: false,
+};
+
 const initialState: ConfigHandler = {
   loading: false,
   error: undefined,
+  saveModal: modalInitialState,
 };
 
 const slice = createSlice({
-  name: 'searchCards',
+  name: 'configHandler',
   initialState,
   reducers: {
+
+    setSaveModalOpened(state: ConfigHandler, action: PayloadAction<boolean>) {
+      state.saveModal = {
+        ...modalInitialState,
+        opened: action.payload,
+      };
+    },
 
     // saveDeckListStart(state: ConfigHandler) {
     //   state.save.loading = true;
@@ -50,6 +64,10 @@ const slice = createSlice({
     // },
   },
 });
+
+export const {
+  setSaveModalOpened,
+} = slice.actions;
 
 export default slice.reducer;
 

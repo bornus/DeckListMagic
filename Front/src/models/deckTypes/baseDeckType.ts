@@ -2,9 +2,6 @@
 
 import { Card } from 'mtgsdk-ts';
 import { EnhancedCard, DeckListConfig, DeckConfig } from '.';
-import { DeckConfig as BackDeckConfig, CardInfo } from '../backTypes';
-import Mordern from './modern';
-import Modern from './modern';
 
 export default abstract class BaseDeckType implements DeckListConfig {
   constructor({ id = "", name }: { id?: string; name: string }) {

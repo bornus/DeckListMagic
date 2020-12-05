@@ -5,20 +5,21 @@ import { Card } from 'mtgsdk-ts';
 
 import { RootState } from 'authentificatedPages/rootReducer';
 import SearchCards from 'features/SearchCards';
+import ConfigHandler from 'features/ConfigHandler';
 // import Spinner from 'react-bootstrap/Spinner';
 import DeckList from './DeckList';
 
 import { newDeck, addCard, removeCard } from './slice';
 import styles from './style.module.scss';
-import Mordern from 'models/deckTypes/modern';
+import Modern from 'models/deckTypes/modern';
 
 export default (): JSX.Element | null => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.deckCreation);
   const { deckListConfig, selectedList } = state;
 
-  const iniMordernDeck = (): void => {
-    dispatch(newDeck(new Mordern({ name: "Test" + (Math.random()*1000) })));
+  const iniModernDeck = (): void => {
+    dispatch(newDeck(new Modern({ name: "Test" + (Math.random()*1000) })));
   };
 
   let currentDeck: string[];
@@ -48,7 +49,7 @@ export default (): JSX.Element | null => {
         return deckListConfig.canAddCardToSideDeck(card);
     }
 
-    return true;
+    return false;
   };
   
   const canRemoveCard = (card: Card): boolean => {
@@ -61,9 +62,10 @@ export default (): JSX.Element | null => {
       <div>Deck name</div>
       <div>
         Deck action (save, load, ...)
-        <Button variant="primary" className="mt-4" size="lg" onClick={iniMordernDeck}>
+        <Button variant="primary" className="mt-4" size="lg" onClick={iniModernDeck}>
           Init commander deck
         </Button>
+        <ConfigHandler />
         {/* <Button variant="primary" className="mt-4" size="lg" onClick={iniTestDeck}>
           Init test deck
         </Button> */}
