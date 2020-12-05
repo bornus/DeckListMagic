@@ -3,9 +3,11 @@ import { Card } from 'mtgsdk-ts';
 import { API, Auth } from 'aws-amplify';
 import axios from 'axios';
 
-import { DeckCreation, EnhancedCard, DeckListConfig, MinifyCard, DeckConfig } from './types';
+import { DeckCreation } from './types';
+import { EnhancedCard, DeckListConfig } from 'models/deckTypes';
+import { CardInfo, DeckConfig as BackDeckConfig } from 'models/backTypes';
 import { putAction, postAction, getAction } from 'utils/apiUtils';
-import baseDeckType from './deckTypes/baseDeckType';
+import { fromBackModel, toBackModel } from 'models/deckTypes/convert';
 // import { Commander } from './deckTypes/commander';
 // import { Test } from './deckTypes/test';
 import { AppThunk, AppDispatch } from 'authentificatedPages/store';
@@ -35,6 +37,8 @@ const slice = createSlice({
       state.deckListConfig = {
         ...action.payload,
         canAddCard: action.payload.canAddCard,
+        canAddCardToMainDeck: action.payload.canAddCardToMainDeck,
+        canAddCardToSideDeck: action.payload.canAddCardToSideDeck,
       };
       console.log('deckListConfig', action.payload, state.deckListConfig);
       // state.deckListConfig.lists = Array(action.payload.listCount).fill([]);
@@ -42,31 +46,27 @@ const slice = createSlice({
     },
     addCard(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
       if (state.deckListConfig) {
-        if (state.deckListConfig.canAddCard(action.payload, state.selectedList)) {
-          const index = state.deckListConfig.lists[state.selectedList].map(({ id }) => id).indexOf(action.payload.id);
+        if(
+          (state.selectedList == 0 && state.deckListConfig.canAddCardToMainDeck(action.payload))
+          || (state.selectedList == 1 && state.deckListConfig.canAddCardToSideDeck(action.payload))
+        ) {
+          const deck = state.selectedList == 0 ? state.deckListConfig.mainDeck : state.deckListConfig.sideDeck
+
+          const index = deck.map(({ id }) => id).indexOf(action.payload.id);
           if (index > -1) {
-            state.deckListConfig.lists[state.selectedList][index].quantity += 1;
-          } else state.deckListConfig.lists[state.selectedList].push({ ...action.payload, quantity: 1 });
+            deck[index].quantity += 1;
+          } else deck.push({ ...action.payload, quantity: 1 });
         }
-      }
-    },
-    setCommander(state: DeckCreation, action: PayloadAction<Card>): void {
-      if (state.deckListConfig?.hasCommander) {
-        state.deckListConfig.commander = action.payload;
-      }
-    },
-    unsetCommander(state: DeckCreation): void {
-      if (state.deckListConfig?.hasCommander) {
-        state.deckListConfig.commander = null;
       }
     },
     removeCard(state: DeckCreation, action: PayloadAction<EnhancedCard | Card>): void {
       if (state.deckListConfig) {
-        const index = state.deckListConfig.lists[state.selectedList].map(({ id }) => id).indexOf(action.payload.id);
+        const deck = state.selectedList == 0 ? state.deckListConfig.mainDeck : state.deckListConfig.sideDeck
+        const index = deck.map(({ id }) => id).indexOf(action.payload.id);
         if (index > -1) {
-          if (state.deckListConfig.lists[state.selectedList][index].quantity > 1)
-            state.deckListConfig.lists[state.selectedList][index].quantity -= 1;
-          else state.deckListConfig.lists[state.selectedList].splice(index, 1);
+          if (deck[index].quantity > 1)
+            deck[index].quantity -= 1;
+          else deck.splice(index, 1);
         }
       }
     },
@@ -110,7 +110,7 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-export const { newDeck, addCard, setCommander, unsetCommander, removeCard, selectDeck } = slice.actions;
+export const { newDeck, addCard, removeCard, selectDeck } = slice.actions;
 
 export const saveDeckListConfig = (): AppThunk => async (dispatch: AppDispatch, getState: () => RootState) => {
   try {
@@ -118,11 +118,18 @@ export const saveDeckListConfig = (): AppThunk => async (dispatch: AppDispatch, 
     if (deckListConfig) {
       dispatch(slice.actions.saveDeckListStart());
 
-      const deckToSave = baseDeckType.minifyDeck(deckListConfig);
-      await postAction({
-        body: deckToSave,
-        path: 'deck',
-      });
+      const deckToSave = toBackModel(deckListConfig);
+      if(deckToSave.Id) {
+        await putAction({
+          body: deckToSave,
+          path: 'deck',
+        });
+      } else {
+        await postAction({
+          body: deckToSave,
+          path: 'deck',
+        });
+      }
 
       dispatch(slice.actions.saveDeckListSuccess());
     }
@@ -142,15 +149,26 @@ export const loadDeckListConfig = (id: string): AppThunk => async (
   try {
     dispatch(slice.actions.loadDeckListStart());
 
-    const deckConfig:DeckListConfig = await getAction({ path: 'deck' });
+    const deckConfig:BackDeckConfig = await getAction({ path: 'deck' });
 
     if (deckConfig) {
-      dispatch(slice.actions.loadDeckListSuccess(deckConfig));
+      const newDeckConfig = fromBackModel(deckConfig)
+      dispatch(slice.actions.loadDeckListSuccess(newDeckConfig));
+
       // Use Set to remove duplicates and push into an array
       const idsSet:Set<String> = new Set();
-      deckConfig.lists.map(list => list.map(card => {
-        idsSet.add(card.id)
-      }))
+      
+      if(newDeckConfig.mainDeck) {
+        newDeckConfig.mainDeck.map(card => {
+          idsSet.add(card.id)
+        })
+      }
+      if(newDeckConfig.sideDeck) {
+        newDeckConfig.sideDeck.map(card => {
+          idsSet.add(card.id)
+        })
+      }
+
       const ids:String[] = Array.from(idsSet);
 
       // TODO: Securise if too many calls
@@ -161,11 +179,17 @@ export const loadDeckListConfig = (id: string): AppThunk => async (
           url: `https://api.magicthegathering.io/v1/cards/${id}`,
         });
 
-        deckConfig.lists.map(list => {
-          list.filter((card) => card.id === id).map(card => {
+
+        if(newDeckConfig.mainDeck) {
+          newDeckConfig.mainDeck.filter((card) => card.id === id).map(card => {
             card = {...card, ...updatedCard }
           })
-        })
+        }
+        if(newDeckConfig.sideDeck) {
+          newDeckConfig.sideDeck.filter((card) => card.id === id).map(card => {
+            card = {...card, ...updatedCard }
+          })
+        }
       })
 
     } else {

@@ -14,9 +14,11 @@ export default ({ className }: AppProps): JSX.Element => {
   if (loading) return <Spinner animation="border" className={className} />;
   if (!deckListConfig) return <div className={className}>No deck config</div>;
 
-  const { lists, maxCards } = deckListConfig;
+  const { mainDeck, sideDeck, maxCards } = deckListConfig;
 
-  if (!lists[selectedList].length)
+  const currentDeck = selectedList == 0 ? mainDeck : sideDeck;
+
+  if (!currentDeck.length)
     return (
       <div className={classnames(className, 'text-right')}>
         <div>Cards: 0/{maxCards || '∞'}</div>
@@ -24,14 +26,13 @@ export default ({ className }: AppProps): JSX.Element => {
       </div>
     );
 
-  const nbSelectedCards = lists[selectedList].reduce((sum, card) => sum + card.quantity, 0);
-
+  const nbSelectedCards = currentDeck.reduce((sum, card) => sum + card.quantity, 0);
   return (
     <div className={classnames(className, 'text-right')}>
       <div>
         Cards: {nbSelectedCards}/{maxCards || '∞'}
       </div>
-      <Cards cards={lists[selectedList]} />
+      <Cards cards={currentDeck} />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from 'authentificatedPages/rootReducer';
 
-import { EnhancedCard } from '../types';
+import { EnhancedCard } from 'models/deckTypes';
 import styles from './style.module.scss';
 
 type AppProps = {
@@ -15,11 +15,11 @@ export default ({ card }: AppProps): JSX.Element | null => {
 
   if (!deckListConfig) return null;
 
-  const { maxCardsPerName, maxLands } = deckListConfig;
+  const { maxCardsPerName } = deckListConfig;
   const { types, supertypes } = card;
-
+  
   let quantity = `(${card.quantity}/${maxCardsPerName})`;
-  if (types.includes('Land') && supertypes.includes('Basic')) {
+  if (types && supertypes && types.includes('Land') && supertypes.includes('Basic')) {
     quantity = `(${card.quantity})`;
   }
 

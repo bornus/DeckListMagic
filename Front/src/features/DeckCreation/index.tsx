@@ -8,10 +8,9 @@ import SearchCards from 'features/SearchCards';
 // import Spinner from 'react-bootstrap/Spinner';
 import DeckList from './DeckList';
 
-import { newDeck, addCard, removeCard, setCommander } from './slice';
+import { newDeck, addCard, removeCard } from './slice';
 import styles from './style.module.scss';
-import Mordern from './deckTypes/mordern';
-import Test from './deckTypes/test';
+import Mordern from 'models/deckTypes/modern';
 
 export default (): JSX.Element | null => {
   const dispatch = useDispatch();
@@ -19,34 +18,39 @@ export default (): JSX.Element | null => {
   const { deckListConfig, selectedList } = state;
 
   const iniMordernDeck = (): void => {
-    dispatch(newDeck(new Mordern()));
-  };
-  const iniTestDeck = (): void => {
-    dispatch(newDeck(new Test()));
+    dispatch(newDeck(new Mordern({ name: "Test" + (Math.random()*1000) })));
   };
 
   let currentDeck: string[];
   if (deckListConfig) {
-    const { lists } = deckListConfig;
-    currentDeck = lists[selectedList].map(({ name }) => name);
+    const { mainDeck, sideDeck } = deckListConfig;
+    switch (selectedList) {
+      case 0:
+        currentDeck = mainDeck.map(({ name }) => name);
+        break;
+      case 1:
+        currentDeck = sideDeck.map(({ name }) => name);
+        break;
+    }
   }
 
   const onAddCard = (card: Card): void => {
     if (!deckListConfig) return;
-
-    if (deckListConfig.hasCommander && !deckListConfig.commander) {
-      // TODO: Add a check if compatible Commander
-      dispatch(setCommander(card));
-    }
-
     dispatch(addCard(card));
   };
 
   const canAddCard = (card: Card): boolean => {
     if (!deckListConfig) return false;
+    switch (selectedList) {
+      case 0:
+        return deckListConfig.canAddCardToMainDeck(card);
+      case 1:
+        return deckListConfig.canAddCardToSideDeck(card);
+    }
+
     return true;
-    // return currentDeck.indexOf(card.id) == -1;
   };
+  
   const canRemoveCard = (card: Card): boolean => {
     if (!deckListConfig) return false;
     return currentDeck.indexOf(card.name) >= 0;

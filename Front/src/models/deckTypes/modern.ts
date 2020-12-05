@@ -2,7 +2,7 @@
 
 import { Card } from 'mtgsdk-ts';
 import BaseDeckType from './baseDeckType';
-import { EnhancedCard, DeckConfig } from '../types';
+import { EnhancedCard, DeckConfig } from '../deckTypes';
 
 export default class Modern extends BaseDeckType {
   // constructor() {
@@ -12,9 +12,13 @@ export default class Modern extends BaseDeckType {
   // }
 
   type = 'Modern';
+  static type = 'Modern';
   listCount = 1;
-  lists: EnhancedCard[][] = Array(this.listCount).fill([]);
-  listConfig: DeckConfig[] = [];
+  mainDeck: EnhancedCard[] = [];
+  sideDeck: EnhancedCard[] = [];
+
+  mainDeckConfig: DeckConfig | null = null;
+  sideDeckConfig: DeckConfig | null = null;
 
   hasCommander = false;
   commander = null;

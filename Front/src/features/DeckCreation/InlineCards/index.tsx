@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import { EnhancedCard } from '../types';
+import { EnhancedCard } from 'models/deckTypes';
 
 import InlineCard from '../InlineCard';
 import styles from './style.module.scss';
