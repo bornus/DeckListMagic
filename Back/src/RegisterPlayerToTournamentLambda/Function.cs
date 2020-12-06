@@ -23,9 +23,10 @@ namespace RegisterPlayerToTournamentLambda
         /// <param name="register">Les infos d'inscriptions au tournoi</param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public TournamentRegistration FunctionHandler(RegisterEvent register, ILambdaContext context)
+        public TournamentRegistration FunctionHandler(AwsPostRequest<RegisterEvent> request, ILambdaContext context)
         {
-            var userUid = context.Identity.IdentityId;
+            var register = request.body;
+            var userUid = request.context.userId;
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
 
             Table deckListTable = Table.LoadTable(client, Constantes.TableName);

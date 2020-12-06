@@ -12,11 +12,12 @@ namespace DeckList.SaveDeckList
 {
     public class Function
     {
-        public Deck FunctionHandler(Deck deckList, ILambdaContext context)
+        public Deck FunctionHandler(AwsPostRequest<Deck> request, ILambdaContext context)
         {
+            var deckList = request.body;
             context.Logger.LogLine($"Beginning to register {deckList.Name} DeckList.");
 
-            var userUid = context.Identity.IdentityId;
+            var userUid = request.context.userId;
             deckList.PlayerId = userUid;
 
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);

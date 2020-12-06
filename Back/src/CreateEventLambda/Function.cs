@@ -16,11 +16,12 @@ namespace CreateEventLambda
 {
     public class Function
     {
-        public MagicEvent FunctionHandler(MagicEvent magicEvent, ILambdaContext context)
+        public MagicEvent FunctionHandler(AwsPostRequest<MagicEvent> request, ILambdaContext context)
         {
+            var magicEvent = request.body;
             context.Logger.LogLine($"Beginning to register {magicEvent.EventName} Event.");
 
-            var userUid = context.Identity.IdentityId;
+            var userUid = request.context.userId;
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
 
             Table deckListTable = Table.LoadTable(client, Constantes.TableName);

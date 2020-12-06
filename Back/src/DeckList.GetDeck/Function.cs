@@ -11,6 +11,11 @@ using System.Collections.Generic;
 
 namespace DeckList.GetDecks
 {
+    public class RequestModel
+    {
+        public string id { get; set; }
+    }
+
     public class Function
     {
 
@@ -20,9 +25,10 @@ namespace DeckList.GetDecks
         /// <param name="guid">Guid of the wanted guid</param>
         /// <param name="context"></param>
         /// <returns>All deck list</returns>
-        public Deck FunctionHandler(string guid, ILambdaContext context)
+        public Deck FunctionHandler(AwsGetRequest<RequestModel> request, ILambdaContext context)
         {
-            var userUid = context.Identity.IdentityId;
+            var guid = request.parameters.id;
+            var userUid = request.context.userId;
             context.Logger.LogLine($"Beginning to get Deck {guid}.");
 
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);

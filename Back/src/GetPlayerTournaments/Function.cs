@@ -13,6 +13,7 @@ using System.Linq;
 
 namespace GetPlayerTournaments
 {
+
     public class Function
     {
         
@@ -21,9 +22,9 @@ namespace GetPlayerTournaments
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        public List<Tournament> FunctionHandler(ILambdaContext context)
+        public List<Tournament> FunctionHandler(AwsEmptyRequest request, ILambdaContext context)
         {
-            var userUid = context.Identity.IdentityId;
+            var userUid = request.context.userId;
             context.Logger.LogLine($"Beginning to search event for player {userUid} Event.");
 
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
