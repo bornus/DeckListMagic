@@ -7,6 +7,26 @@ export type TestApiType = {
   verb?: string;
 };
 
+const testApiGet = async (path: string): Promise<string> => {
+  try {
+    const apiName = 'api';
+    const Authorization = `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`;
+    const data = {
+      headers: {
+        Authorization,
+      },
+    };
+
+    const rest = await API.get(apiName, path, data);
+
+    console.log('Success', rest);
+    return JSON.stringify(rest);
+  } catch (e) {
+    console.error(e);
+    return e.toString();
+  }
+};
+
 const testApi = async ({ body, path, verb = 'POST' }: TestApiType): Promise<string> => {
   try {
     const apiName = 'api';
@@ -18,8 +38,7 @@ const testApi = async ({ body, path, verb = 'POST' }: TestApiType): Promise<stri
       },
     };
 
-    const rest =
-      verb === 'PUT' ? await API.put(apiName, path, data) : await API.post(apiName, path, data);
+    const rest = verb === 'PUT' ? await API.put(apiName, path, data) : await API.post(apiName, path, data);
 
     console.log('Success', rest);
     return JSON.stringify(rest);
@@ -66,17 +85,27 @@ export default (): JSX.Element => {
               path: '/deck',
               // verb: 'POST',
               body: {
-                Name: "Toto",
-                Format: "Modern",
-                Author: "Moi",
-                MainDeck: [{ name: "firstCard", id: "bolt", quantity: 1 }],
-                SideDeck: [{ name: "SideCard", id: "boltSide", quantity: 100 }],
+                Name: 'Toto',
+                Format: 'Modern',
+                Author: 'Moi',
+                MainDeck: [{ name: 'firstCard', id: 'bolt', quantity: 1 }],
+                SideDeck: [{ name: 'SideCard', id: 'boltSide', quantity: 100 }],
               },
             }),
           )
         }
       >
         Test api - Create Deck
+      </button>
+      Test get decks
+      <button
+        onClick={async (): Promise<void> =>
+          setResult(
+            await testApiGet('/decks'),
+          )
+        }
+      >
+        Test api - get Decks
       </button>
     </div>
   );

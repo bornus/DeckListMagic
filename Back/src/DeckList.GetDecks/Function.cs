@@ -9,20 +9,28 @@ using System.Collections.Generic;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
+
 namespace DeckList.GetDecks
 {
+    public class RequestFilter
+    {
+        public string filter { get; set; }
+    }
+
     public class Function
     {
-
         /// <summary>
         /// Returns all player's decklist
         /// </summary>
-        /// <param name="filter">Not used for now</param>
+        /// <param name="request">Request from gateway</param>
         /// <param name="context"></param>
         /// <returns>All deck list</returns>
-        public List<Deck> FunctionHandler(string filter, ILambdaContext context)
+        public List<Deck> FunctionHandler(AwsGetRequest<RequestFilter> request, ILambdaContext context)
         {
-            var userUid = context.Identity.IdentityId;
+            //context.Logger.LogLine($"Context: {JsonConvert.SerializeObject(context)}");
+            //context.Logger.LogLine($"Filter: {JsonConvert.SerializeObject(filter)}");
+
+            var userUid = request.context.userId;
             context.Logger.LogLine($"Beginning to get all deck of user {userUid}.");
 
             using var client = new AmazonDynamoDBClient(Amazon.RegionEndpoint.EUWest1);
