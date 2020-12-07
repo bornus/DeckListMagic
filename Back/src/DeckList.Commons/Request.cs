@@ -12,23 +12,12 @@
     /// #set($allParams = $input.params())
     /// {
     /// "body" : $input.json('$'),
-    /// "parameters" : {
-    /// # foreach($type in $allParams.keySet())
-    /// # set($params = $allParams.get($type))
-    ///     "$type" : {
-    /// # foreach($paramName in $params.keySet())
-    ///         "$paramName" : "$util.escapeJavaScript($params.get($paramName))"
-    ///         #if ($foreach.hasNext),#end
-    /// # end
-    /// }
-    /// #if ($foreach.hasNext),#end
-    /// # end
-    /// },
+    /// "parameters" : {},
     /// "stageVariables" : {
-    /// # foreach($key in $stageVariables.keySet())
+    /// #foreach($key in $stageVariables.keySet())
     /// "$key" : "$util.escapeJavaScript($stageVariables.get($key))"
     /// #if ($foreach.hasNext),#end
-    /// # end
+    /// #end
     /// },
     /// "context" : {
     ///     "authorizerPrincipalId" : "$context.authorizer.principalId",
@@ -51,22 +40,22 @@
     /// {
     /// "body" : {},
     /// "parameters" : {
-    /// # foreach($type in $allParams.keySet())
-    /// # set($params = $allParams.get($type))
+    /// #foreach($type in $allParams.keySet())
+    /// #set($params = $allParams.get($type))
     ///     "$type" : {
-    /// # foreach($paramName in $params.keySet())
+    /// #foreach($paramName in $params.keySet())
     ///         "$paramName" : "$util.escapeJavaScript($params.get($paramName))"
     ///         #if ($foreach.hasNext),#end
-    /// # end
+    /// #end
     /// }
     /// #if ($foreach.hasNext),#end
-    /// # end
+    /// #end
     /// },
     /// "stageVariables" : {
-    /// # foreach($key in $stageVariables.keySet())
+    /// #foreach($key in $stageVariables.keySet())
     /// "$key" : "$util.escapeJavaScript($stageVariables.get($key))"
     /// #if ($foreach.hasNext),#end
-    /// # end
+    /// #end
     /// },
     /// "context" : {
     ///     "authorizerPrincipalId" : "$context.authorizer.principalId",
