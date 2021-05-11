@@ -95,7 +95,7 @@
     "eslint-plugin-react": "^7.20.6",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "prettier": "^2.0.5",
     "proxy-agent": "^3.1.1"
   }
